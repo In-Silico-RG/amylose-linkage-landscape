@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use these data or code, please cite the paper and this deposit."
+title: "amylose-linkage-landscape: code and data for 'Conformational Energy Landscape of the α(1→4) Linkage and the Dimensions of Amylose in Water'"
+authors:
+  - family-names: "Ruiz Rocha"
+    given-names: "Yurimar"
+    affiliation: "Departamento de Física, Universidad de Sucre, Colombia"
+  - family-names: "Combariza"
+    given-names: "Aldo F."
+    affiliation: "Grupo de Investigación in silico, Universidad de Sucre, Colombia"
+license: MIT
+repository-code: "https://github.com/In-Silico-RG/amylose-linkage-landscape"
+keywords: [amylose, glycosidic linkage, energy map, GFN2-xTB, transfer matrix, Monte Carlo, persistence length]

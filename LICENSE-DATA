@@ -1,0 +1,8 @@
+The data in this repository (the xtb scans in cheminf/scan*/, the map files
+cheminf/*.dat, the structures cheminf/*.xyz and cheminf/template*/, the arrays
+cheminf/*.npy and the results in resultados/) are licensed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+Copyright (c) 2026 Yurimar Ruiz Rocha and Aldo F. Combariza
+
+Full text: https://creativecommons.org/licenses/by/4.0/legalcode

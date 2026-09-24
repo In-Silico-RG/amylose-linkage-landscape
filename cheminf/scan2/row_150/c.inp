@@ -1,0 +1,8 @@
+$constrain
+  force constant=0.5
+  dihedral: 11,10,9,8,150
+  dihedral: 10,9,8,5,-120
+$end
+$scan
+  2: -120,230,36
+$end

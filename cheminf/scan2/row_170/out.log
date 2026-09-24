@@ -1,0 +1,1190 @@
+      -----------------------------------------------------------      
+     |                   =====================                   |     
+     |                           x T B                           |     
+     |                   =====================                   |     
+     |                         S. Grimme                         |     
+     |          Mulliken Center for Theoretical Chemistry        |     
+     |                    University of Bonn                     |     
+      -----------------------------------------------------------      
+
+   * xtb version 6.7.1 (edcfbbe) compiled by 'conda@5dfe00f5fb80' on 2026-06-10
+
+   xtb is free software: you can redistribute it and/or modify it under
+   the terms of the GNU Lesser General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   xtb is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Lesser General Public License for more details.
+   
+   Cite this work as:
+   * C. Bannwarth, E. Caldeweyher, S. Ehlert, A. Hansen, P. Pracht,
+     J. Seibert, S. Spicher, S. Grimme, WIREs Comput. Mol. Sci., 2020, 11,
+     e01493. DOI: 10.1002/wcms.1493
+   
+   for GFN2-xTB:
+   * C. Bannwarth, S. Ehlert and S. Grimme., J. Chem. Theory Comput., 2019,
+     15, 1652-1671. DOI: 10.1021/acs.jctc.8b01176
+   for GFN1-xTB:
+   * S. Grimme, C. Bannwarth, P. Shushkov, J. Chem. Theory Comput., 2017,
+     13, 1989-2009. DOI: 10.1021/acs.jctc.7b00118
+   for GFN0-xTB:
+   * P. Pracht, E. Caldeweyher, S. Ehlert, S. Grimme, ChemRxiv, 2019, preprint.
+     DOI: 10.26434/chemrxiv.8326202.v1
+   for GFN-FF:
+   * S. Spicher and S. Grimme, Angew. Chem. Int. Ed., 2020, 59, 15665-15673.
+     DOI: 10.1002/anie.202004239
+   
+   for ALPB and GBSA implicit solvation:
+   * S. Ehlert, M. Stahn, S. Spicher, S. Grimme, J. Chem. Theory Comput.,
+     2021, 17, 4250-4261. DOI: 10.1021/acs.jctc.1c00471
+   
+   for ddCOSMO and CPCM-X implicit solvation:
+   * M. Stahn, S. Ehlert, S. Grimme, J. Phys. Chem. A,
+     2023, XX, XXXX-XXXX. DOI: 10.1021/acs.jpca.3c04382
+   
+   for DFT-D4:
+   * E. Caldeweyher, C. Bannwarth and S. Grimme, J. Chem. Phys., 2017,
+     147, 034112. DOI: 10.1063/1.4993215
+   * E. Caldeweyher, S. Ehlert, A. Hansen, H. Neugebauer, S. Spicher,
+     C. Bannwarth and S. Grimme, J. Chem. Phys., 2019, 150, 154122.
+     DOI: 10.1063/1.5090222
+   * E. Caldeweyher, J.-M. Mewes, S. Ehlert and S. Grimme, Phys. Chem. Chem. Phys.
+     2020, 22, 8499-8512. DOI: 10.1039/D0CP00502A
+   
+   for sTDA-xTB:
+   * S. Grimme and C. Bannwarth, J. Chem. Phys., 2016, 145, 054103.
+     DOI: 10.1063/1.4959605
+   
+   in the mass-spec context:
+   * V. Asgeirsson, C. Bauer and S. Grimme, Chem. Sci., 2017, 8, 4879.
+     DOI: 10.1039/c7sc00601b
+   * J. Koopman and S. Grimme, ACS Omega 2019, 4, 12, 15120-15133.
+     DOI: 10.1021/acsomega.9b02011
+   
+   for metadynamics refer to:
+   * S. Grimme, J. Chem. Theory Comput., 2019, 155, 2847-2862
+     DOI: 10.1021/acs.jctc.9b00143
+   
+   for SPH calculations refer to:
+   * S. Spicher and S. Grimme, J. Chem. Theory Comput., 2021, 17, 1701-1714
+     DOI: 10.1021/acs.jctc.0c01306
+   
+   for ONIOM refer to:
+   * C. Plett, A. Katbashev, S. Ehlert, S. Grimme, M. Bursch,
+     Phys. Chem. Chem. Phys., 2023, 25, 17860-17868. DOI: 10.1039/D3CP02178E
+   
+   for DIPRO refer to:
+   * J. Kohn, N. Gildemeister, S. Grimme, D. Fazzi, A. Hansen,
+     J. Chem. Phys., 2023, just accepted.
+   
+   for PTB refer to:
+   * S. Grimme, M. Mueller, A. Hansen, J. Chem. Phys., 2023, 158, 124111.
+     DOI: 10.1063/5.0137838
+   
+   with help from (in alphabetical order)
+   P. Atkinson, C. Bannwarth, F. Bohle, G. Brandenburg, E. Caldeweyher
+   M. Checinski, S. Dohm, S. Ehlert, S. Ehrlich, I. Gerasimov, C. Hölzer
+   A. Katbashev, J. Kohn, J. Koopman, C. Lavigne, S. Lehtola, F. März, M. Müller,
+   F. Musil, H. Neugebauer, J. Pisarek, C. Plett, P. Pracht, F. Pultar,
+   J. Seibert, P. Shushkov, S. Spicher, M. Stahn, M. Steiner, T. Strunk,
+   J. Stückrath, T. Rose, and J. Unsleber
+   
+ * started run on 2026/09/21 at 15:38:14.181     
+   ID    Z sym.   atoms
+    1    6 C      1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 19, 21, 23
+    2    8 O      2, 4, 7, 9, 11, 14, 16, 18, 20, 22, 24
+    3    1 H      25-48
+constraining angle 11 10 9 8 to  170.0000000°, actual value:  169.6610061°
+constraining angle 10 9 8 5 to -120.0000000°, actual value: -119.1042117°
+
+           -------------------------------------------------
+          |                Calculation Setup                |
+           -------------------------------------------------
+
+          program call               : /media/aldo/Aldo/envs/chem/bin/xtb start.xyz --gfn 2 --alpb water --opt normal --input c.inp
+          coordinate file            : start.xyz
+          omp threads                :                     1
+
+
+           -------------------------------------------------
+          |                 G F N 2 - x T B                 |
+           -------------------------------------------------
+
+        Reference                      10.1021/acs.jctc.8b01176
+      * Hamiltonian:
+        H0-scaling (s, p, d)           1.850000    2.230000    2.230000
+        zeta-weighting                 0.500000
+      * Dispersion:
+        s8                             2.700000
+        a1                             0.520000
+        a2                             5.000000
+        s9                             5.000000
+      * Repulsion:
+        kExp                           1.500000    1.000000
+        rExp                           1.000000
+      * Coulomb:
+        alpha                          2.000000
+        third order                    shell-resolved
+        anisotropic                    true
+        a3                             3.000000
+        a5                             4.000000
+        cn-shift                       1.200000
+        cn-exp                         4.000000
+        max-rad                        5.000000
+
+      * Solvation model:               ALPB
+        Solvent                        water
+        Parameter file                 internal GFN2-xTB/ALPB
+        Dielectric constant                8.0200E+01
+        Reference state                gsolv [1 M gas/solution]
+        Free energy shift                  1.0808E-03 Eh       6.7819E-01 kcal/mol
+        Temperature                        2.9815E+02 K
+        Density                            1.0000E+00 kg/L
+        Solvent mass                       1.8000E+01 g/mol
+        Interaction kernel             P16
+        Born radius scaling (c1)           1.4744E+00
+        Born radii integrator          GBOBC
+        Born offset                        0.0000E+00 a0       0.0000E+00 AA
+        H-bond correction              true
+        Ion screening                  false
+        Surface tension                    1.0000E-05 Eh       1.5569E+01 dyn/cm
+        Grid points                               230 per atom
+
+          ...................................................
+          :                      SETUP                      :
+          :.................................................:
+          :  # basis functions                 120          :
+          :  # atomic orbitals                 120          :
+          :  # shells                           72          :
+          :  # electrons                       142          :
+          :  max. iterations                   250          :
+          :  Hamiltonian                  GFN2-xTB          :
+          :  restarted?                      false          :
+          :  GBSA solvation                   true          :
+          :  PC potential                    false          :
+          :  electronic temp.          300.0000000     K    :
+          :  accuracy                    1.0000000          :
+          :  -> integral cutoff          0.2500000E+02      :
+          :  -> integral neglect         0.1000000E-07      :
+          :  -> SCF convergence          0.1000000E-05 Eh   :
+          :  -> wf. convergence          0.1000000E-03 e    :
+          :  Broyden damping             0.4000000          :
+          :  net charge                          0          :
+          :  unpaired electrons                  0          :
+          ...................................................
+
+ iter      E             dE          RMSdq      gap      omega  full diag
+   1    -85.3798705 -0.853799E+02  0.481E+00    9.77       0.0  T
+   2    -85.4671798 -0.873093E-01  0.257E+00    9.58       1.0  T
+   3    -85.4707420 -0.356219E-02  0.703E-01    9.65       1.0  T
+   4    -85.4718844 -0.114243E-02  0.177E-01    9.64       1.0  T
+   5    -85.4720330 -0.148607E-03  0.893E-02    9.66       1.0  T
+   6    -85.4720668 -0.338330E-04  0.226E-02    9.66       1.0  T
+   7    -85.4720697 -0.290413E-05  0.895E-03    9.66       1.6  T
+   8    -85.4720704 -0.701236E-06  0.358E-03    9.66       4.0  T
+   9    -85.4720705 -0.886845E-07  0.160E-03    9.66       9.0  T
+  10    -85.4720705 -0.206645E-07  0.473E-04    9.66      30.5  T
+  11    -85.4720705 -0.191011E-08  0.172E-04    9.66      83.7  T
+
+   *** convergence criteria satisfied after 11 iterations ***
+
+         #    Occupation            Energy/Eh            Energy/eV
+      -------------------------------------------------------------
+         1        2.0000           -0.7370273             -20.0555
+       ...           ...                  ...                  ...
+        65        2.0000           -0.4280328             -11.6474
+        66        2.0000           -0.4248643             -11.5611
+        67        2.0000           -0.4229627             -11.5094
+        68        2.0000           -0.4176384             -11.3645
+        69        2.0000           -0.4136821             -11.2569
+        70        2.0000           -0.4097430             -11.1497
+        71        2.0000           -0.4056194             -11.0375 (HOMO)
+        72                         -0.0506902              -1.3793 (LUMO)
+        73                         -0.0404935              -1.1019
+        74                         -0.0164906              -0.4487
+        75                         -0.0032246              -0.0877
+        76                          0.0065114               0.1772
+       ...                                ...                  ...
+       120                          0.2952882               8.0352
+      -------------------------------------------------------------
+                  HL-Gap            0.3549293 Eh            9.6581 eV
+             Fermi-level           -0.2281548 Eh           -6.2084 eV
+
+ SCC (total)                   0 d,  0 h,  0 min,  0.207 sec
+ SCC setup                      ...        0 min,  0.005 sec (  2.574%)
+ Dispersion                     ...        0 min,  0.001 sec (  0.571%)
+ classical contributions        ...        0 min,  0.000 sec (  0.129%)
+ integral evaluation            ...        0 min,  0.021 sec ( 10.323%)
+ iterations                     ...        0 min,  0.067 sec ( 32.481%)
+ molecular gradient             ...        0 min,  0.111 sec ( 53.581%)
+ printout                       ...        0 min,  0.001 sec (  0.328%)
+
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         ::                     SUMMARY                     ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         :: total energy             -84.854953501818 Eh    ::
+         :: total w/o Gsasa/hb       -84.828002126198 Eh    ::
+         :: gradient norm              0.000208009850 Eh/a0 ::
+         :: HOMO-LUMO gap              9.658116676592 eV    ::
+         ::.................................................::
+         :: SCC energy               -85.471344309897 Eh    ::
+         :: -> isotropic ES            0.283007680253 Eh    ::
+         :: -> anisotropic ES         -0.019120957146 Eh    ::
+         :: -> anisotropic XC         -0.016890746398 Eh    ::
+         :: -> dispersion             -0.046701523254 Eh    ::
+         :: -> Gsolv                  -0.054107650878 Eh    ::
+         ::    -> Gelec               -0.027156275258 Eh    ::
+         ::    -> Gsasa                0.006182592257 Eh    ::
+         ::    -> Ghb                 -0.034214727575 Eh    ::
+         ::    -> Gshift               0.001080759698 Eh    ::
+         :: repulsion energy           0.616320948887 Eh    ::
+         :: add. restraining           0.000069859191 Eh    ::
+         :: total charge              -0.000000000000 e     ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+
+          ...................................................
+          :                      SETUP                      :
+          :.................................................:
+          :   optimization level            normal          :
+          :   max. optcycles                   200          :
+          :   ANC micro-cycles                  20          :
+          :   degrees of freedom               138          :
+          :.................................................:
+          :   RF solver                   davidson          :
+          :   write xtbopt.log                true          :
+          :   linear?                        false          :
+          :   energy convergence         0.5000000E-05 Eh   :
+          :   grad. convergence          0.1000000E-02 Eh/α :
+          :   maxmium RF displ.          1.0000000          :
+          :   Hlow (freq-cutoff)         0.1000000E-01      :
+          :   Hmax (freq-cutoff)         5.0000000          :
+          :   S6 in model hess.         20.0000000          :
+          ...................................................
+
+generating ANC from exact Hessian ...
+Using Lindh-Hessian (1995)
+ Shifting diagonal of input Hessian by    9.5931255722405042E-003
+ Lowest  eigenvalues of input Hessian
+    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000
+    0.010000    0.010221    0.010495    0.010968    0.012119    0.012697
+    0.012775    0.013747    0.014256    0.014852    0.015056    0.015804
+ Highest eigenvalues
+    1.527305    1.540376    1.562723    1.590690    1.653956    1.682696
+
+
+........................................................................
+.............................. CYCLE    1 ..............................
+........................................................................
+
+ iter      E             dE          RMSdq      gap      omega  full diag
+   1    -85.4720705 -0.854721E+02  0.784E-05    9.66       0.0  T
+   2    -85.4720705 -0.182041E-10  0.500E-05    9.66     288.7  T
+   3    -85.4720705 -0.785860E-11  0.155E-05    9.66     930.2  T
+     SCC iter.                  ...        0 min,  0.020 sec
+     gradient                   ...        0 min,  0.082 sec
+ * total energy  :   -84.8549535 Eh     change       -0.1566463E-09 Eh
+   gradient norm :     0.0002067 Eh/α   predicted     0.0000000E+00 (-100.00%)
+   displ. norm   :     0.0118849 α      lambda       -0.4785513E-07
+   maximum displ.:     0.0090019 α      in ANC's #2, #3, #9, ...
+
+   *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
+
+------------------------------------------------------------------------
+ total energy gain   :        -0.0000000 Eh       -0.0000 kcal/mol
+ total RMSD          :         0.0000000 a0        0.0000 Å
+ total power (kW/mol):        -0.0000004 (step)   -0.0000 (real)
+------------------------------------------------------------------------
+
+ ANCopt (total)                0 d,  0 h,  0 min,  0.188 sec
+ optimizer setup                ...        0 min,  0.000 sec (  0.067%)
+ model hessian                  ...        0 min,  0.055 sec ( 29.444%)
+ ANC generation                 ...        0 min,  0.005 sec (  2.427%)
+ coordinate transformation      ...        0 min,  0.000 sec (  0.028%)
+ single point calculation       ...        0 min,  0.123 sec ( 65.570%)
+ optimization log               ...        0 min,  0.003 sec (  1.746%)
+ hessian update                 ...        0 min,  0.000 sec (  0.002%)
+ rational function              ...        0 min,  0.000 sec (  0.101%)
+
+================
+ final structure:
+================
+48
+ xtb: 6.7.1 (edcfbbe)
+C            5.73042200000000        0.97405800000000       -0.73696200000000
+O            4.64793600000000        1.44558100000000        0.06072600000000
+C            3.53592200000000        0.62387400000000        0.08938500000000
+O            2.93689000000000        0.58184900000000       -1.18829100000000
+C            1.74972300000000       -0.18910500000000       -1.21733400000000
+C            1.27987400000000       -0.24221600000000       -2.67613400000000
+O            2.17288900000000       -0.94202900000000       -3.49951600000000
+C            0.66952500000000        0.41303100000000       -0.29261600000000
+O           -0.47832800000000       -0.41971500000000       -0.34383100000000
+C           -1.68709600000000        0.14419700000000       -0.81156900000000
+O           -2.57872100000000       -0.91141800000000       -0.99040400000000
+C           -2.91456700000000       -1.58674600000000        0.22147500000000
+C           -3.86692900000000       -2.72811000000000       -0.16891100000000
+O           -4.18151500000000       -3.55577000000000        0.92367800000000
+C           -3.57084900000000       -0.63104700000000        1.23264200000000
+O           -3.76506500000000       -1.24581800000000        2.48188600000000
+C           -2.67324000000000        0.59418600000000        1.45063500000000
+O           -3.32158100000000        1.58532300000000        2.21429700000000
+C           -2.33683100000000        1.20908600000000        0.09225100000000
+O           -1.52350800000000        2.34468700000000        0.18648800000000
+C            1.24995200000000        0.43536500000000        1.13191400000000
+O            0.35144800000000        1.01132200000000        2.03744900000000
+C            2.56992800000000        1.21495300000000        1.12509500000000
+O            3.10326800000000        1.14637900000000        2.42129900000000
+H            5.45583700000000        0.97096900000000       -1.79170900000000
+H            6.02119500000000       -0.03284900000000       -0.42594000000000
+H            6.54209200000000        1.67402900000000       -0.56136300000000
+H            3.81378200000000       -0.40979500000000        0.39006200000000
+H            1.96509800000000       -1.21322900000000       -0.87479100000000
+H            1.13587300000000        0.78401200000000       -3.03566800000000
+H            0.33424700000000       -0.78455900000000       -2.72033100000000
+H            3.02952200000000       -0.49210300000000       -3.47857000000000
+H            0.42140600000000        1.43076700000000       -0.60188800000000
+H           -1.53130200000000        0.58107200000000       -1.80996900000000
+H           -1.99885100000000       -1.99094400000000        0.67444900000000
+H           -3.41697300000000       -3.28891700000000       -0.99281900000000
+H           -4.80906700000000       -2.29986300000000       -0.51838700000000
+H           -3.43535000000000       -4.14196400000000        1.11398900000000
+H           -4.53335400000000       -0.28267400000000        0.82160900000000
+H           -4.22811400000000       -2.09097600000000        2.33948000000000
+H           -1.74419600000000        0.28063700000000        1.94282300000000
+H           -3.58413800000000        1.19143900000000        3.05891400000000
+H           -3.28826300000000        1.47767400000000       -0.40118300000000
+H           -1.84640900000000        2.87192800000000        0.93485800000000
+H            1.45745900000000       -0.60587200000000        1.43188800000000
+H            0.83941300000000        1.19851000000000        2.85646000000000
+H            2.36684600000000        2.25632600000000        0.83591600000000
+H            3.93369900000000        1.64446000000000        2.45200200000000
+
+ Bond Distances (Angstroems)
+ ---------------------------
+C1-O2=1.4249         C1-H25=1.0899        C1-H26=1.0932        C1-H27=1.0861        O2-C1=1.4249         O2-C3=1.3830         
+C3-O2=1.3830         C3-O4=1.4118         C3-C23=1.5347        C3-H28=1.1118        O4-C3=1.4118         O4-C5=1.4158         
+C5-O4=1.4158         C5-C6=1.5335         C5-C8=1.5442         C5-H29=1.1012        C6-C5=1.5335         C6-O7=1.4018         
+C6-H30=1.0969        C6-H31=1.0910        O7-C6=1.4018         O7-H32=0.9678        C8-C5=1.5442         C8-O9=1.4190         
+C8-C21=1.5384        C8-H33=1.0922        O9-C8=1.4190         O9-C10=1.4135        C10-O9=1.4135        C10-O11=1.3933       
+C10-C19=1.5405       C10-H34=1.1009       O11-C10=1.3933       O11-C12=1.4274       C12-O11=1.4274       C12-C13=1.5369       
+C12-C15=1.5384       C12-H35=1.0987       C13-C12=1.5369       C13-O14=1.4063       C13-H36=1.0935       C13-H37=1.0923       
+O14-C13=1.4063       O14-H38=0.9678       C15-C12=1.5384       C15-O16=1.4058       C15-C17=1.5344       C15-H39=1.1031       
+O16-C15=1.4058       O16-H40=0.9742       C17-C15=1.5344       C17-O18=1.4092       C17-C19=1.5286       C17-H41=1.0971       
+O18-C17=1.4092       O18-H42=0.9682       C19-C10=1.5405       C19-C17=1.5286       C19-O20=1.4000       C19-H43=1.1049       
+O20-C19=1.4000       O20-H44=0.9707       C21-C8=1.5384        C21-O22=1.3997       C21-C23=1.5330       C21-H45=1.1033       
+O22-C21=1.3997       O22-H46=0.9716       C23-C3=1.5347        C23-C21=1.5330       C23-O24=1.4033       C23-H47=1.0997       
+O24-C23=1.4033       O24-H48=0.9688       H25-C1=1.0899        H26-C1=1.0932        H27-C1=1.0861        H28-C3=1.1118        
+H29-C5=1.1012        H30-C6=1.0969        H31-C6=1.0910        H32-O7=0.9678        H33-C8=1.0922        H34-C10=1.1009       
+H35-C12=1.0987       H36-C13=1.0935       H37-C13=1.0923       H38-O14=0.9678       H39-C15=1.1031       H40-O16=0.9742       
+H41-C17=1.0971       H42-O18=0.9682       H43-C19=1.1049       H44-O20=0.9707       H45-C21=1.1033       H46-O22=0.9716       
+H47-C23=1.0997       H48-O24=0.9688       
+ C  H  Rav=1.0974 sigma=0.0063  Rmin=1.0861  Rmax=1.1118    17
+ C  C  Rav=1.5362 sigma=0.0042  Rmin=1.5286  Rmax=1.5442    10
+ O  H  Rav=0.9699 sigma=0.0022  Rmin=0.9678  Rmax=0.9742     7
+ O  C  Rav=1.4077 sigma=0.0114  Rmin=1.3830  Rmax=1.4274    15
+
+ selected bond angles (degree)
+ --------------------
+H25-C1-O2=110.57               H26-C1-O2=110.34               H26-C1-H25=109.86              H27-C1-O2=105.30               
+H27-C1-H25=110.28              H27-C1-H26=110.42              C3-O2-C1=115.20                O4-C3-O2=109.88                
+C23-C3-O2=106.93               C23-C3-O4=110.80               H28-C3-O2=110.92               H28-C3-O4=108.85               
+H28-C3-C23=109.44              C5-O4-C3=112.99                C6-C5-O4=107.17                C8-C5-O4=111.22                
+C8-C5-C6=111.64                H29-C5-O4=109.64               H29-C5-C6=108.88               H29-C5-C8=108.25               
+O7-C6-C5=112.39                H30-C6-C5=108.64               H30-C6-O7=110.99               H31-C6-C5=108.74               
+H31-C6-O7=106.27               H31-C6-H30=109.76              H32-O7-C6=108.61               O9-C8-C5=108.39                
+C21-C8-C5=107.23               C21-C8-O9=110.31               H33-C8-C5=110.65               H33-C8-O9=110.66               
+H33-C8-C21=109.53              C10-O9-C8=118.01               O11-C10-O9=106.71              C19-C10-O9=116.25              
+C19-C10-O11=109.22             H34-C10-O9=109.72              H34-C10-O11=105.95             H34-C10-C19=108.51             
+
+ selected dihedral angles (degree)
+ ---------------------------------
+C3-O2-C1-H25= 66.79           C3-O2-C1-H26=305.05           C3-O2-C1-H27=185.90           O4-C3-O2-C1=293.48            
+C23-C3-O2-C1=173.15           H28-C3-O2-C1= 53.88           C5-O4-C3-O2=183.02            C5-O4-C3-C23=300.98           
+C5-O4-C3-H28= 61.38           C6-C5-O4-C3=184.65            C8-C5-O4-C3= 62.36            H29-C5-O4-C3=302.67           
+O7-C6-C5-O4= 65.76            O7-C6-C5-C8=187.78            O7-C6-C5-H29=307.24           H30-C6-C5-O4=302.55           
+H30-C6-C5-C8= 64.57           H30-C6-C5-H29=184.03          H31-C6-C5-O4=183.13           H31-C6-C5-C8=305.15           
+H31-C6-C5-H29= 64.61          H32-O7-C6-C5=299.34           H32-O7-C6-H30= 61.23          H32-O7-C6-H31=180.51          
+O9-C8-C5-O4=181.31            O9-C8-C5-C6= 61.65            O9-C8-C5-H29=301.82           C21-C8-C5-O4=300.39           
+C21-C8-C5-C6=180.74           C21-C8-C5-H29= 60.90          H33-C8-C5-O4= 59.80           H33-C8-C5-C6=300.14           
+H33-C8-C5-H29=180.31          C10-O9-C8-C5=240.90           C10-O9-C8-C21=123.77          C10-O9-C8-H33=  2.40          
+O11-C10-O9-C8=169.66          C19-C10-O9-C8=291.75          H34-C10-O9-C8= 55.31          
+           -------------------------------------------------
+          |                Final Singlepoint                |
+           -------------------------------------------------
+
+          ...................................................
+          :                      SETUP                      :
+          :.................................................:
+          :  # basis functions                 120          :
+          :  # atomic orbitals                 120          :
+          :  # shells                           72          :
+          :  # electrons                       142          :
+          :  max. iterations                   250          :
+          :  Hamiltonian                  GFN2-xTB          :
+          :  restarted?                      false          :
+          :  GBSA solvation                   true          :
+          :  PC potential                    false          :
+          :  electronic temp.          300.0000000     K    :
+          :  accuracy                    1.0000000          :
+          :  -> integral cutoff          0.2500000E+02      :
+          :  -> integral neglect         0.1000000E-07      :
+          :  -> SCF convergence          0.1000000E-05 Eh   :
+          :  -> wf. convergence          0.1000000E-03 e    :
+          :  Broyden damping             0.4000000          :
+          :  net charge                          0          :
+          :  unpaired electrons                  0          :
+          ...................................................
+
+ iter      E             dE          RMSdq      gap      omega  full diag
+   1    -85.4720705 -0.854721E+02  0.715E-06    9.66       0.0  T
+   2    -85.4720705 -0.568434E-13  0.476E-06    9.66    3035.4  T
+   3    -85.4720705 -0.184741E-12  0.201E-06    9.66    7187.3  T
+
+   *** convergence criteria satisfied after 3 iterations ***
+
+         #    Occupation            Energy/Eh            Energy/eV
+      -------------------------------------------------------------
+         1        2.0000           -0.7370282             -20.0556
+       ...           ...                  ...                  ...
+        65        2.0000           -0.4280335             -11.6474
+        66        2.0000           -0.4248655             -11.5612
+        67        2.0000           -0.4229632             -11.5094
+        68        2.0000           -0.4176404             -11.3646
+        69        2.0000           -0.4136834             -11.2569
+        70        2.0000           -0.4097442             -11.1497
+        71        2.0000           -0.4056211             -11.0375 (HOMO)
+        72                         -0.0506917              -1.3794 (LUMO)
+        73                         -0.0404954              -1.1019
+        74                         -0.0164910              -0.4487
+        75                         -0.0032260              -0.0878
+        76                          0.0065106               0.1772
+       ...                                ...                  ...
+       120                          0.2952871               8.0352
+      -------------------------------------------------------------
+                  HL-Gap            0.3549293 Eh            9.6581 eV
+             Fermi-level           -0.2281564 Eh           -6.2085 eV
+
+ SCC (total)                   0 d,  0 h,  0 min,  0.117 sec
+ SCC setup                      ...        0 min,  0.002 sec (  1.767%)
+ Dispersion                     ...        0 min,  0.004 sec (  3.087%)
+ classical contributions        ...        0 min,  0.000 sec (  0.216%)
+ integral evaluation            ...        0 min,  0.030 sec ( 25.823%)
+ iterations                     ...        0 min,  0.021 sec ( 17.978%)
+ molecular gradient             ...        0 min,  0.059 sec ( 50.331%)
+ printout                       ...        0 min,  0.001 sec (  0.769%)
+
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         ::                     SUMMARY                     ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         :: total energy             -84.854953501977 Eh    ::
+         :: total w/o Gsasa/hb       -84.828001786790 Eh    ::
+         :: gradient norm              0.000206833170 Eh/a0 ::
+         :: HOMO-LUMO gap              9.658118862513 eV    ::
+         ::.................................................::
+         :: SCC energy               -85.471344310056 Eh    ::
+         :: -> isotropic ES            0.283009332173 Eh    ::
+         :: -> anisotropic ES         -0.019121909471 Eh    ::
+         :: -> anisotropic XC         -0.016890797796 Eh    ::
+         :: -> dispersion             -0.046701554027 Eh    ::
+         :: -> Gsolv                  -0.054108689882 Eh    ::
+         ::    -> Gelec               -0.027156974694 Eh    ::
+         ::    -> Gsasa                0.006182592257 Eh    ::
+         ::    -> Ghb                 -0.034215067142 Eh    ::
+         ::    -> Gshift               0.001080759698 Eh    ::
+         :: repulsion energy           0.616320948887 Eh    ::
+         :: add. restraining           0.000069859191 Eh    ::
+         :: total charge               0.000000000000 e     ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+========================================================================
+ RELAXED SCAN
+------------------------------------------------------------------------
+ output written to xtbscan.log
+ scaning constraint 2
+... step 1 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85495350
+    bias energy:           0.00006986
+unbiased energy:         -84.85502336
+... step 2 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85572608
+    bias energy:           0.00002075
+unbiased energy:         -84.85574683
+... step 3 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85555071
+    bias energy:           0.00003363
+unbiased energy:         -84.85558434
+... step 4 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85452879
+    bias energy:           0.00005421
+unbiased energy:         -84.85458300
+... step 5 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85304510
+    bias energy:           0.00009777
+unbiased energy:         -84.85314288
+... step 6 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85154724
+    bias energy:           0.00008303
+unbiased energy:         -84.85163027
+... step 7 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85370582
+    bias energy:           0.00017743
+unbiased energy:         -84.85388325
+... step 8 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85083269
+    bias energy:           0.00074824
+unbiased energy:         -84.85158093
+... step 9 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84619130
+    bias energy:           0.00172296
+unbiased energy:         -84.84791426
+... step 10 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84004615
+    bias energy:           0.00310924
+unbiased energy:         -84.84315540
+... step 11 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.83292826
+    bias energy:           0.00382597
+unbiased energy:         -84.83675424
+... step 12 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84657450
+    bias energy:           0.00083917
+unbiased energy:         -84.84741367
+... step 13 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84328030
+    bias energy:           0.00112334
+unbiased energy:         -84.84440364
+... step 14 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84058183
+    bias energy:           0.00086318
+unbiased energy:         -84.84144501
+... step 15 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.83875597
+    bias energy:           0.00049509
+unbiased energy:         -84.83925106
+... step 16 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.83814680
+    bias energy:           0.00025376
+unbiased energy:         -84.83840056
+... step 17 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.83866630
+    bias energy:           0.00018981
+unbiased energy:         -84.83885611
+... step 18 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.83954690
+    bias energy:           0.00020137
+unbiased energy:         -84.83974827
+... step 19 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84009260
+    bias energy:           0.00034117
+unbiased energy:         -84.84043377
+... step 20 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.83972457
+    bias energy:           0.00050821
+unbiased energy:         -84.84023278
+... step 21 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85053205
+    bias energy:           0.00016150
+unbiased energy:         -84.85069355
+... step 22 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85192364
+    bias energy:           0.00006515
+unbiased energy:         -84.85198878
+... step 23 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85170205
+    bias energy:           0.00021182
+unbiased energy:         -84.85191387
+... step 24 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84988304
+    bias energy:           0.00058011
+unbiased energy:         -84.85046314
+... step 25 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84721308
+    bias energy:           0.00076342
+unbiased energy:         -84.84797650
+... step 26 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84486845
+    bias energy:           0.00062017
+unbiased energy:         -84.84548863
+... step 27 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84341828
+    bias energy:           0.00043671
+unbiased energy:         -84.84385499
+... step 28 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84312128
+    bias energy:           0.00031520
+unbiased energy:         -84.84343648
+... step 29 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84466705
+    bias energy:           0.00024704
+unbiased energy:         -84.84491410
+... step 30 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84565415
+    bias energy:           0.00031071
+unbiased energy:         -84.84596486
+... step 31 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84654097
+    bias energy:           0.00038445
+unbiased energy:         -84.84692542
+... step 32 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84726486
+    bias energy:           0.00040635
+unbiased energy:         -84.84767121
+... step 33 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84808056
+    bias energy:           0.00032035
+unbiased energy:         -84.84840091
+... step 34 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.84957912
+    bias energy:           0.00021263
+unbiased energy:         -84.84979175
+... step 35 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85165532
+    bias energy:           0.00015855
+unbiased energy:         -84.85181388
+... step 36 ...
+      ----------------------------------------------------------- 
+     |                   =====================                   |
+     |                        A N C O P T                        |
+     |                   =====================                   |
+     |               Approximate Normal Coordinate               |
+     |                Rational Function Optimizer                |
+      ----------------------------------------------------------- 
+ current energy:         -84.85479335
+    bias energy:           0.00014603
+unbiased energy:         -84.85493938
+           -------------------------------------------------
+          |                Property Printout                |
+           -------------------------------------------------
+
+    * Orbital Energies and Occupations
+
+         #    Occupation            Energy/Eh            Energy/eV
+      -------------------------------------------------------------
+         1        2.0000           -0.7351532             -20.0045
+       ...           ...                  ...                  ...
+        59        2.0000           -0.4604896             -12.5306
+        60        2.0000           -0.4530689             -12.3286
+        61        2.0000           -0.4496579             -12.2358
+        62        2.0000           -0.4451012             -12.1118
+        63        2.0000           -0.4351443             -11.8409
+        64        2.0000           -0.4302913             -11.7088
+        65        2.0000           -0.4294251             -11.6853
+        66        2.0000           -0.4254750             -11.5778
+        67        2.0000           -0.4175631             -11.3625
+        68        2.0000           -0.4152207             -11.2987
+        69        2.0000           -0.4141494             -11.2696
+        70        2.0000           -0.4103102             -11.1651
+        71        2.0000           -0.4036226             -10.9831 (HOMO)
+        72                         -0.0445462              -1.2122 (LUMO)
+        73                         -0.0400581              -1.0900
+        74                         -0.0217527              -0.5919
+        75                         -0.0038684              -0.1053
+        76                          0.0109633               0.2983
+        77                          0.0178342               0.4853
+        78                          0.0229726               0.6251
+        79                          0.0308103               0.8384
+        80                          0.0443777               1.2076
+        81                          0.0492523               1.3402
+        82                          0.0575616               1.5663
+       ...                                ...                  ...
+       120                          0.3117211               8.4824
+      -------------------------------------------------------------
+                  HL-Gap            0.3590764 Eh            9.7710 eV
+             Fermi-level           -0.2240844 Eh           -6.0976 eV
+
+     #   Z          covCN         q      C6AA      α(0)
+     1   6 C        3.646     0.019    20.588     6.520
+     2   8 O        1.701    -0.365    20.170     6.064
+     3   6 C        3.644     0.233    17.271     5.974
+     4   8 O        1.700    -0.351    19.904     6.023
+     5   6 C        3.744     0.092    19.133     6.240
+     6   6 C        3.676     0.075    19.548     6.335
+     7   8 O        1.655    -0.494    22.772     6.442
+     8   6 C        3.733     0.094    19.113     6.240
+     9   8 O        1.700    -0.357    20.025     6.042
+    10   6 C        3.642     0.240    17.183     5.960
+    11   8 O        1.701    -0.343    19.757     6.001
+    12   6 C        3.752     0.084    19.245     6.256
+    13   6 C        3.676     0.064    19.726     6.364
+    14   8 O        1.655    -0.492    22.715     6.434
+    15   6 C        3.728     0.093    19.128     6.244
+    16   8 O        1.655    -0.498    22.838     6.451
+    17   6 C        3.730     0.101    19.002     6.223
+    18   8 O        1.656    -0.501    22.909     6.461
+    19   6 C        3.729     0.094    19.115     6.241
+    20   8 O        1.656    -0.490    22.676     6.428
+    21   6 C        3.729     0.101    19.001     6.223
+    22   8 O        1.656    -0.471    22.270     6.370
+    23   6 C        3.725     0.088    19.223     6.261
+    24   8 O        1.656    -0.503    22.952     6.467
+    25   1 H        0.924     0.055     2.253     2.347
+    26   1 H        0.924     0.056     2.243     2.342
+    27   1 H        0.925     0.090     1.875     2.141
+    28   1 H        0.923     0.038     2.470     2.458
+    29   1 H        0.924     0.061     2.184     2.311
+    30   1 H        0.923     0.036     2.500     2.473
+    31   1 H        0.924     0.063     2.166     2.301
+    32   1 H        0.804     0.365     0.554     1.169
+    33   1 H        0.924     0.056     2.244     2.342
+    34   1 H        0.923     0.045     2.385     2.415
+    35   1 H        0.923     0.053     2.286     2.364
+    36   1 H        0.924     0.057     2.230     2.335
+    37   1 H        0.924     0.069     2.094     2.263
+    38   1 H        0.805     0.373     0.538     1.152
+    39   1 H        0.923     0.031     2.569     2.506
+    40   1 H        0.804     0.364     0.558     1.173
+    41   1 H        0.923     0.042     2.428     2.437
+    42   1 H        0.805     0.372     0.540     1.154
+    43   1 H        0.923     0.033     2.548     2.496
+    44   1 H        0.804     0.374     0.535     1.149
+    45   1 H        0.924     0.069     2.091     2.261
+    46   1 H        0.804     0.347     0.595     1.211
+    47   1 H        0.923     0.053     2.278     2.360
+    48   1 H        0.804     0.381     0.521     1.134
+
+ Mol. C6AA /au·bohr⁶  :      19165.079039
+ Mol. C8AA /au·bohr⁸  :     410852.010401
+ Mol. α(0) /au        :        198.561781
+
+
+Wiberg/Mayer (AO) data.
+largest (>0.10) Wiberg bond orders for each atom
+
+ ---------------------------------------------------------------------------
+     #   Z sym  total        # sym  WBO       # sym  WBO       # sym  WBO
+ ---------------------------------------------------------------------------
+     1   6 C    3.922 --    25 H    0.980    26 H    0.978    27 H    0.977
+                             2 O    0.962
+     2   8 O    2.061 --     3 C    0.977     1 C    0.962
+     3   6 C    3.928 --     2 O    0.977     4 O    0.974    23 C    0.956
+                            28 H    0.945
+     4   8 O    2.075 --     3 C    0.974     5 C    0.955
+     5   6 C    3.942 --     6 C    0.979     8 C    0.968    29 H    0.956
+                             4 O    0.955
+     6   6 C    3.961 --     7 O    1.011     5 C    0.979    31 H    0.968
+                            30 H    0.967
+     7   8 O    1.924 --     6 C    1.011    32 H    0.853
+     8   6 C    3.937 --     5 C    0.968    21 C    0.961    33 H    0.957
+                             9 O    0.956
+     9   8 O    2.068 --    10 C    0.963     8 C    0.956
+    10   6 C    3.924 --    11 O    0.991     9 O    0.963    19 C    0.954
+                            34 H    0.948
+    11   8 O    2.072 --    10 C    0.991    12 C    0.947
+    12   6 C    3.930 --    13 C    0.975    15 C    0.965    35 H    0.958
+                            11 O    0.947
+    13   6 C    3.953 --    14 O    1.009    12 C    0.975    36 H    0.969
+                            37 H    0.968
+    14   8 O    1.944 --    13 C    1.009    38 H    0.849
+    15   6 C    3.963 --    16 O    1.003    17 C    0.968    12 C    0.965
+                            39 H    0.956
+    16   8 O    1.920 --    15 C    1.003    40 H    0.833
+    17   6 C    3.962 --    18 O    0.997    19 C    0.972    15 C    0.968
+                            41 H    0.955
+    18   8 O    1.920 --    17 C    0.997    42 H    0.846
+    19   6 C    3.965 --    20 O    1.007    17 C    0.972    10 C    0.954
+                            43 H    0.953
+    20   8 O    1.927 --    19 C    1.007    44 H    0.841
+    21   6 C    3.961 --    22 O    1.013     8 C    0.961    23 C    0.959
+                            45 H    0.956
+    22   8 O    1.955 --    21 C    1.013    46 H    0.857
+    23   6 C    3.959 --    24 O    1.006    21 C    0.959    47 H    0.958
+                             3 C    0.956
+    24   8 O    1.920 --    23 C    1.006    48 H    0.840
+    25   1 H    0.997 --     1 C    0.980
+    26   1 H    0.997 --     1 C    0.978
+    27   1 H    0.991 --     1 C    0.977
+    28   1 H    0.998 --     3 C    0.945
+    29   1 H    0.996 --     5 C    0.956
+    30   1 H    0.999 --     6 C    0.967
+    31   1 H    0.996 --     6 C    0.968
+    32   1 H    0.867 --     7 O    0.853
+    33   1 H    0.997 --     8 C    0.957
+    34   1 H    0.997 --    10 C    0.948
+    35   1 H    0.997 --    12 C    0.958
+    36   1 H    0.996 --    13 C    0.969
+    37   1 H    0.995 --    13 C    0.968
+    38   1 H    0.861 --    14 O    0.849
+    39   1 H    0.999 --    15 C    0.956
+    40   1 H    0.867 --    16 O    0.833
+    41   1 H    0.998 --    17 C    0.955
+    42   1 H    0.861 --    18 O    0.846
+    43   1 H    0.999 --    19 C    0.953
+    44   1 H    0.860 --    20 O    0.841
+    45   1 H    0.995 --    21 C    0.956
+    46   1 H    0.879 --    22 O    0.857
+    47   1 H    0.997 --    23 C    0.958
+    48   1 H    0.855 --    24 O    0.840
+ ---------------------------------------------------------------------------
+
+Topologies differ in total number of bonds
+Writing topology from bond orders to xtbtopo.mol
+
+molecular dipole:
+                 x           y           z       tot (Debye)
+ q only:        0.939      -0.020      -0.665
+   full:        1.349       0.078      -0.695       3.861
+molecular quadrupole (traceless):
+                xx          xy          yy          xz          yz          zz
+ q only:       22.469       5.256     -17.165       0.562      -5.622      -5.304
+  q+dip:       23.572       6.909     -22.481      -3.490      -8.285      -1.091
+   full:       24.689       6.766     -22.246      -2.321      -7.997      -2.444
+
+           -------------------------------------------------
+          |                Geometry Summary                 |
+           -------------------------------------------------
+
+      molecular mass/u    :      356.3235988
+   center of mass at/Å    :       -0.0892140      -0.0492700       0.0593522
+  moments of inertia/u·Å² :        0.1358556E+04   0.3336120E+04   0.3810816E+04
+rotational constants/cm⁻¹ :        0.1240849E-01   0.5053066E-02   0.4423628E-02
+
+ * 47 selected distances
+
+     #   Z          #   Z                                           value/Å
+     1   6 C        2   8 O                                       1.4230966
+     2   8 O        3   6 C                                       1.4022104
+     3   6 C        4   8 O                                       1.4014039
+     4   8 O        5   6 C                                       1.4276631
+     5   6 C        6   6 C                                       1.5326024
+     6   6 C        7   8 O                                       1.4023884
+     5   6 C        8   6 C                                       1.5370874
+     8   6 C        9   8 O                                       1.4205390
+     9   8 O       10   6 C                                       1.4097422
+    10   6 C       11   8 O                                       1.3945788
+    11   8 O       12   6 C                                       1.4277877
+    12   6 C       13   6 C                                       1.5368511
+    13   6 C       14   8 O                                       1.4063201
+    12   6 C       15   6 C                                       1.5397770 (max)
+    15   6 C       16   8 O                                       1.4057549
+    15   6 C       17   6 C                                       1.5360268
+    17   6 C       18   8 O                                       1.4075029
+    10   6 C       19   6 C                                       1.5379375
+    17   6 C       19   6 C                                       1.5287796
+    19   6 C       20   8 O                                       1.3989393
+    21   6 C       22   8 O                                       1.3965171
+     3   6 C       23   6 C                                       1.5352105
+    23   6 C       24   8 O                                       1.4021836
+     1   6 C       25   1 H                                       1.0917836
+     1   6 C       26   1 H                                       1.0933443
+     1   6 C       27   1 H                                       1.0858866
+     3   6 C       28   1 H                                       1.1033640
+     5   6 C       29   1 H                                       1.0978932
+     6   6 C       30   1 H                                       1.0987293
+     6   6 C       31   1 H                                       1.0909559
+     7   8 O       32   1 H                                       0.9686640
+     8   6 C       33   1 H                                       1.0938217
+    10   6 C       34   1 H                                       1.1019148
+    12   6 C       35   1 H                                       1.0988023
+    13   6 C       36   1 H                                       1.0933911
+    13   6 C       37   1 H                                       1.0924218
+    14   8 O       38   1 H                                       0.9680203 (min)
+    15   6 C       39   1 H                                       1.1031576
+    16   8 O       40   1 H                                       0.9742259
+    17   6 C       41   1 H                                       1.0981904
+    18   8 O       42   1 H                                       0.9680289
+    19   6 C       43   1 H                                       1.1044100
+    20   8 O       44   1 H                                       0.9707907
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+normal termination of xtb
+    21   6 C       45   1 H                                       1.0964821
+    22   8 O       46   1 H                                       0.9692653
+    23   6 C       47   1 H                                       1.0979923
+    24   8 O       48   1 H                                       0.9690048
+
+ * 4 distinct bonds (by element types)
+
+   Z      Z             #   av. dist./Å        max./Å        min./Å
+   1 H    6 C          17     1.0966201     1.1044100     1.0858866
+   6 C    6 C           8     1.5355340     1.5397770     1.5287796
+   1 H    8 O           7     0.9697143     0.9742259     0.9680203
+   6 C    8 O          15     1.4084419     1.4277877     1.3945788
+
+
+optimized geometry written to: xtbopt.xyz
+
+
+           -------------------------------------------------
+          | TOTAL ENERGY              -84.854953501977 Eh   |
+          | GRADIENT NORM               0.000206833170 Eh/α |
+          | HOMO-LUMO GAP               9.770965147174 eV   |
+           -------------------------------------------------
+
+------------------------------------------------------------------------
+ * finished run on 2026/09/21 at 15:41:28.620     
+------------------------------------------------------------------------
+ total:
+ * wall-time:     0 d,  0 h,  3 min, 14.440 sec
+ *  cpu-time:     0 d,  0 h,  2 min, 57.016 sec
+ * ratio c/w:     0.910 speedup
+ SCF:
+ * wall-time:     0 d,  0 h,  0 min,  0.207 sec
+ *  cpu-time:     0 d,  0 h,  0 min,  0.142 sec
+ * ratio c/w:     0.687 speedup
+ ANC optimizer:
+ * wall-time:     0 d,  0 h,  3 min, 14.164 sec
+ *  cpu-time:     0 d,  0 h,  2 min, 56.842 sec
+ * ratio c/w:     0.911 speedup
+

@@ -1,0 +1,11 @@
+{
+  "title": "amylose-linkage-landscape: code and data for \"Conformational Energy Landscape of the α(1→4) Linkage and the Dimensions of Amylose in Water\"",
+  "upload_type": "software",
+  "description": "GFN2-xTB (φ,ψ) scans of methyl α-maltoside in ALPB water, GBSA water and vacuum; the validated energy maps; the chain builder, frame validation, exact transfer-matrix and Monte Carlo codes; the r2SCAN benchmark; the MD analysis scripts; and the numerical results behind every table and figure of the paper. MD trajectories are available from the corresponding author on request.",
+  "creators": [
+    {"name": "Ruiz Rocha, Yurimar", "affiliation": "Universidad de Sucre, Colombia"},
+    {"name": "Combariza, Aldo F.", "affiliation": "Universidad de Sucre, Colombia"}
+  ],
+  "license": "MIT",
+  "keywords": ["amylose", "glycosidic linkage", "energy map", "GFN2-xTB", "transfer matrix", "Monte Carlo", "persistence length"]
+}
