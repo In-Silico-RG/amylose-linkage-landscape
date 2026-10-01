@@ -1,0 +1,30 @@
+{
+ "CHARMM36": {
+  "n": 78480,
+  "flips": 0.06270387359836904,
+  "phi_mean": 89.04774835783374,
+  "psi_mean": -143.57889167213332,
+  "phi_sd": 20.496156091392002,
+  "psi_sd": 17.884481313847985,
+  "C_all": 9.191910597633939,
+  "C_unflipped": 16.25226457292205,
+  "C_unflipped_phi_of_other": 18.18311761655817,
+  "C_unflipped_psi_of_other": 18.118345978059182,
+  "C_unflipped_widths_of_other": 24.68746723965898,
+  "C_unflipped_widths_and_means_of_other": 30.585350621319073
+ },
+ "GLYCAM06": {
+  "n": 24525,
+  "flips": 0.0066462793068298165,
+  "phi_mean": 77.5968366154333,
+  "psi_mean": -147.310458922352,
+  "phi_sd": 15.696344620369326,
+  "psi_sd": 14.930915147873385,
+  "C_all": 28.398876655757142,
+  "C_unflipped": 34.41317706806149,
+  "C_unflipped_phi_of_other": 31.05098688876992,
+  "C_unflipped_psi_of_other": 31.1709881884377,
+  "C_unflipped_widths_of_other": 23.308286212790033,
+  "C_unflipped_widths_and_means_of_other": 18.84840814500295
+ }
+}
