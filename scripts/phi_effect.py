@@ -9,6 +9,18 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent; RES = HERE.parent / "resultados"
 sys.path.insert(0, str(HERE))
 from ring_factor_blocks import rigid_RV, cinf
+def write_table(out):
+    """SI table: one property at a time exchanged between the two force fields -> ../manuscript_JPCB/tab_phi_effect.tex"""
+    c, g = out["CHARMM36"], out["GLYCAM06"]; f = lambda k, d=1: f"{c[k]:.{d}f} & {g[k]:.{d}f}"
+    L = [f"flipped linkages (\\%) & {100*c['flips']:.1f} & {100*g['flips']:.1f} \\\\",
+         f"mean $\\varphi$, $\\psi$ of the unflipped linkages & ${c['phi_mean']:.0f}^\\circ$, ${c['psi_mean']:.0f}^\\circ$ & ${g['phi_mean']:.0f}^\\circ$, ${g['psi_mean']:.0f}^\\circ$ \\\\",
+         f"standard deviation of $\\varphi$, $\\psi$ & ${c['phi_sd']:.1f}^\\circ$, ${c['psi_sd']:.1f}^\\circ$ & ${g['phi_sd']:.1f}^\\circ$, ${g['psi_sd']:.1f}^\\circ$ \\\\", "\\midrule",
+         f"$C_\\infty$, all linkages & {f('C_all')} \\\\", f"$C_\\infty$, unflipped linkages only & {f('C_unflipped')} \\\\",
+         f"\\quad with the mean $\\varphi$ of the other force field & {f('C_unflipped_phi_of_other')} \\\\", f"\\quad with the mean $\\psi$ of the other & {f('C_unflipped_psi_of_other')} \\\\",
+         f"\\quad with the widths of the other & {f('C_unflipped_widths_of_other')} \\\\", f"\\quad with the widths and the means of the other & {f('C_unflipped_widths_and_means_of_other')} \\\\"]
+    (HERE.parent / "manuscript_JPCB" / "tab_phi_effect.tex").write_text("\n".join(L) + "\n\\bottomrule\n")
+if len(sys.argv) > 1 and sys.argv[1] == "table":
+    write_table(json.loads((RES / "phi_effect.json").read_text())); sys.exit()
 def load(pat):
     return np.concatenate([np.load(f)["phipsi"][200::10].reshape(-1, 2).astype(float) for f in sorted(glob.glob(str(RES / "rep" / pat)))])
 def C(pp):
@@ -39,3 +51,4 @@ for k, other in (("CHARMM36", "GLYCAM06"), ("GLYCAM06", "CHARMM36")):
     S[:, 0] += mphi[other] - mphi[k]; S[:, 1] += mpsi[other] - mpsi[k]; out[k]["C_unflipped_widths_and_means_of_other"] = C(S)
     print(k, "widths of", other, round(out[k]["C_unflipped_widths_of_other"], 2), "| widths and means:", round(out[k]["C_unflipped_widths_and_means_of_other"], 2), flush=True)
 (RES / "phi_effect.json").write_text(json.dumps(out, indent=1))
+write_table(out)
