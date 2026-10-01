@@ -5,30 +5,30 @@
 :root{
   --bg:#f6f8fa; --panel:#ffffff; --ink:#18222d; --muted:#5a6876; --line:#d5dce3;
   --blue:#2a78d6; --blue-soft:#cfe2f8; --orange:#eb6834; --teal:#12996b; --band:#dff3ea;
-  --heat0:#143a66; --heat1:#e9f0f7; --void:#eceff2; --dot:#ffffff; --dotline:#18222d; --plane2:#b4691f; --atomO:#d2463b; --atomC:#5f6b77; --atomH:#f4f6f8; --bond:#8a95a0; --pageA:#12996b; --pageD:#d98a2b;
+  --heat0:#143a66; --heat1:#e9f0f7; --void:#eceff2; --dot:#ffffff; --dotline:#18222d; --plane2:#b4691f; --atomO:#d2463b; --atomC:#5f6b77; --atomH:#f4f6f8; --bond:#8a95a0; --pageA:#12996b; --pageD:#d98a2b; --flipfill:#f9d6c6;
   --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#10161c; --panel:#18212a; --ink:#e6edf3; --muted:#9aa8b5; --line:#2c3945;
   --blue:#5aa2f0; --blue-soft:#1f3a57; --orange:#f58a5c; --teal:#3fc79a; --band:#173a2e;
-  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; --atomO:#f0776c; --atomC:#9aa6b2; --atomH:#e9eef2; --bond:#74808c; --pageA:#3fc79a; --pageD:#e9a85a; color-scheme:dark } }
+  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; --atomO:#f0776c; --atomC:#9aa6b2; --atomH:#e9eef2; --bond:#74808c; --pageA:#3fc79a; --pageD:#e9a85a; --flipfill:#5a3324; color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#10161c; --panel:#18212a; --ink:#e6edf3; --muted:#9aa8b5; --line:#2c3945;
   --blue:#5aa2f0; --blue-soft:#1f3a57; --orange:#f58a5c; --teal:#3fc79a; --band:#173a2e;
-  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; --atomO:#f0776c; --atomC:#9aa6b2; --atomH:#e9eef2; --bond:#74808c; --pageA:#3fc79a; --pageD:#e9a85a; color-scheme:dark }
+  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; --atomO:#f0776c; --atomC:#9aa6b2; --atomH:#e9eef2; --bond:#74808c; --pageA:#3fc79a; --pageD:#e9a85a; --flipfill:#5a3324; color-scheme:dark }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;margin:0}
 .wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:28px 60px;display:flex;flex-direction:column;gap:22px}
 h1{font-size:1.7rem;font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
 .lede{color:var(--muted);max-width:68ch;margin:0}
 .controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:10px;
-  padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px 28px}
+  padding:12px 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px 24px}
 .ctl{display:flex;flex-direction:column;gap:4px;min-width:0}
 .ctl label{font-weight:600;font-size:.92rem;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
 .ctl output{font-family:var(--mono);font-weight:500;color:var(--blue);white-space:nowrap}
-.ctl.flip output{color:var(--orange)}
+.ctl.flip output{color:var(--plane2)} .ctl:not(.phi):not(.flip) output{color:var(--orange)}
 input[type=range]{width:100%;accent-color:var(--blue);margin:0}
-.ctl.flip input[type=range]{accent-color:var(--orange)}
+.ctl.flip input[type=range]{accent-color:var(--plane2)} .ctl:not(.phi):not(.flip) input[type=range]{accent-color:var(--orange)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips button{font:inherit;font-size:.78rem;padding:2px 9px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
 .chips button:hover{border-color:var(--blue)} .chips button:focus-visible, input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
@@ -44,6 +44,7 @@ canvas{display:block;width:100%;touch-action:pan-y;border-radius:6px}
 .two{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
 .struct{padding:4px 4px 0} .struct svg{display:block;max-width:560px;height:auto;margin:0 auto}
 .dials{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ttl{font-weight:600;font-size:.92rem;padding:2px 6px;color:var(--blue)} .ttl.o{color:var(--orange)}
 details{padding:2px 4px} summary{cursor:pointer;font-size:.9rem;font-weight:600;color:var(--blue);padding:4px 0}
 .note{font-size:.84rem;color:var(--muted)}
 .seg{display:flex;gap:6px;padding:2px 4px}
@@ -64,23 +65,29 @@ ol.methods .n{font-family:var(--mono);font-weight:600;min-width:1.2em} ol.method
 .gauge .tick{position:absolute;top:32px;font-family:var(--mono);font-size:.7rem;color:var(--muted);transform:translateX(-50%)}
 .key{display:inline-block;width:.8em;height:.8em;border-radius:2px;vertical-align:-.05em;margin-right:.3em}
 dfn{font-style:normal;font-weight:600}
-@media (max-width:760px){ .step{grid-template-columns:1fr} .controls{grid-template-columns:1fr} h1{font-size:1.4rem} }
+@media (max-width:900px){ .controls{grid-template-columns:1fr} }
+@media (max-width:760px){ .step{grid-template-columns:1fr} h1{font-size:1.4rem} }
 </style>
 
 <div class="wrap">
   <header>
     <h1>How one joint between two glucose rings decides the size of an amylose chain</h1>
-    <p class="lede">Eight drawings, all computed from the geometry and the energies used in the paper. The two sliders stay at the top: move them and every drawing follows. Drag a molecule to turn it.</p>
+    <p class="lede">Eight drawings, all computed from the geometry and the energies used in the paper. The three sliders stay at the top: move them and every drawing follows. You can also click on the energy map of view 4 to set φ and ψ together.</p>
   </header>
 
-  <div class="controls" role="group" aria-label="The two quantities">
+  <div class="controls" role="group" aria-label="The settings of the joint">
+    <div class="ctl phi">
+      <label for="phi1">Angle φ <output id="phi1Out" for="phi1"></output></label>
+      <input id="phi1" type="range" min="60" max="140" step="1" value="100">
+      <div class="chips" id="phiChips"></div>
+    </div>
     <div class="ctl">
-      <label for="psi">Angle ψ of the joint <output id="psiOut" for="psi"></output></label>
+      <label for="psi">Angle ψ <output id="psiOut" for="psi"></output></label>
       <input id="psi" type="range" min="-180" max="-100" step="2.5" value="-150">
       <div class="chips" id="psiChips"></div>
     </div>
     <div class="ctl flip">
-      <label for="flip">Joints in the flipped position <output id="flipOut" for="flip"></output></label>
+      <label for="flip">Flipped joints <output id="flipOut" for="flip"></output></label>
       <input id="flip" type="range" min="0" max="100" step="1" value="50">
       <div class="chips" id="flipChips"></div>
     </div>
@@ -94,8 +101,7 @@ dfn{font-style:normal;font-weight:600}
         <div><canvas id="nphi" height="250" aria-label="Phi seen straight down the bond C1 prime to O4"></canvas><div class="sub">φ: looking down the bond C1′ → O4</div></div>
         <div><canvas id="npsi" height="250" aria-label="Psi seen straight down the bond O4 to C4"></canvas><div class="sub">ψ: looking down the bond O4 → C4</div></div>
       </div>
-      <div class="local"><label for="phi1">φ</label><input id="phi1" type="range" min="60" max="140" step="2.5" value="100"><output id="phi1Out" for="phi1"></output></div>
-      <div class="read"><span>φ = <b id="r1phi"></b></span><span>ψ = <b class="o" id="r1psi"></b></span><span>ψ is the top slider</span></div>
+      <div class="read"><span>φ = <b id="r1phi"></b></span><span>ψ = <b class="o" id="r1psi"></b></span><span>both set by the sliders at the top</span></div>
       <details id="d3"><summary>Show the two rings in 3D</summary>
         <canvas id="c1" height="330" aria-label="The two rings in three dimensions"></canvas>
         <div class="sub">Ring atoms and oxygens only, hydrogens left out. The blue and orange bonds are the same two bonds as above. Drag to turn.</div>
@@ -108,7 +114,7 @@ dfn{font-style:normal;font-weight:600}
       <p>Both are <dfn>dihedral (torsion) angles</dfn>: four atoms in a row, A–B–C–D. Look straight down the middle bond, from B to C. A is attached to the front atom and D to the back atom. The angle between them is the dihedral angle, counted positive when you go clockwise from A to D. The two round drawings are exactly this view.</p>
       <p><dfn>φ = O5′–C1′–O4–C4</dfn>. Front atom C1′ carries O5′; back atom O4 carries C4.</p>
       <p><dfn>ψ = C1′–O4–C4–C5</dfn>. Front atom O4 carries C1′; back atom C4 carries C5.</p>
-      <p>Move the sliders: the coloured bond at the back turns, and that is the second ring turning. In a real chain both angles fluctuate. In the simulations of this work φ averages 89° (CHARMM36) or 78° (GLYCAM06) and ψ averages −144° or −147°, each with a spread of 15° to 20°.</p>
+      <p>Move the φ and ψ sliders at the top: the coloured bond at the back turns, and that is the second ring turning. In a real chain both angles fluctuate. In the simulations of this work φ averages 89° (CHARMM36) or 78° (GLYCAM06) and ψ averages −144° or −147°, each with a spread of 15° to 20°.</p>
       <p class="note">Convention: the drawing and the sign rule follow IUPAC-IUB, <i>Pure Appl. Chem.</i> 1983, 55, 1269. IUPAC takes C3 as the reference atom for ψ; this work takes C5, as most simulation papers do, which shifts ψ by about 120°.</p>
     </div>
   </section>
@@ -117,7 +123,7 @@ dfn{font-style:normal;font-weight:600}
     <div class="fig">
       <canvas id="c2" height="230" aria-label="Twenty rings with the same angle at every joint: a regular helix"></canvas>
       <div class="read"><span>rings per turn <b id="r2n"></b></span><span>advance per ring <b id="r2rise"></b></span><span>length of 20 rings <b id="r2len"></b></span></div>
-      <div class="cap">Twenty glucose units, the same φ and ψ at all nineteen joints (φ from the slider in view 1). Carbon skeleton grey, oxygens red; hydrogens not drawn. Same scale at every setting.</div>
+      <div class="cap">Twenty glucose units, the same φ and ψ at all nineteen joints. Carbon skeleton grey, oxygens red; hydrogens not drawn. Same scale at every setting.</div>
     </div>
     <div>
       <div class="num">2 · REPEAT IT</div>
@@ -130,30 +136,47 @@ dfn{font-style:normal;font-weight:600}
 
   <section class="step">
     <div class="fig">
-      <canvas id="c3" height="330" aria-label="The same helix with one joint flipped: a kink"></canvas>
-      <div class="read"><span>flipped joint: φ = <b class="o">90°</b>, ψ = <b class="o">+70°</b></span></div>
-      <div class="cap">The same twenty units, with the tenth joint alone set to ψ = +70°. Units after the flip are drawn in orange.</div>
+      <div class="dials">
+        <div><div class="ttl">Normal joint</div><canvas id="f3a" height="250" aria-label="The two rings at a normal joint"></canvas></div>
+        <div><div class="ttl o">Flipped joint</div><canvas id="f3b" height="250" aria-label="The two rings at a flipped joint"></canvas></div>
+      </div>
+      <div class="sub">Ring 1 (left) is held in the same position in both drawings. Each ring is filled according to the face it turns toward you: <span class="key" style="background:var(--blue-soft);border:1px solid var(--blue)"></span>one face, <span class="key" style="background:var(--flipfill);border:1px solid var(--orange)"></span>the opposite face. Drag to turn.</div>
+      <div class="dials">
+        <div><canvas id="n3a" height="210" aria-label="Psi at a normal joint, seen down the bond O4 to C4"></canvas></div>
+        <div><canvas id="n3b" height="210" aria-label="Psi at a flipped joint, seen down the bond O4 to C4"></canvas></div>
+      </div>
+      <div class="sub">ψ seen down the bond O4 → C4, as in view 1. C1′ is in front; C5, C3 and H4 belong to ring 2 behind.</div>
+      <canvas id="c3" height="300" aria-label="A chain of twenty rings with one flipped joint"></canvas>
+      <div class="read"><span>normal joint: φ = <b id="r3phi"></b>, ψ = <b class="o" id="r3psi"></b></span><span>flipped joint: φ = <b>90°</b>, ψ = <b class="o">+70°</b></span></div>
+      <div class="cap">Bottom: twenty glucose units with the tenth joint alone flipped. Units after the flip are drawn in orange.</div>
     </div>
     <div>
       <div class="num">3 · THE FLIP</div>
-      <h2>One joint turned by half a turn puts a kink in the chain</h2>
-      <p>The joint has a second position it can occupy, with ψ near +70°, roughly half a turn away from the usual one. The next ring is then upside down relative to its neighbour. Crystallographers who first saw it called it a <dfn>band flip</dfn>.</p>
-      <p>In a chain, one flipped joint breaks the helix and sends the rest of the chain off in another direction. The more joints are flipped, the more often the chain changes direction and the smaller the space it spans.</p>
+      <h2>A flipped joint: ψ jumps by about half a turn and the next ring turns over</h2>
+      <p>The joint has a second position it can settle in. φ stays about where it was, but ψ sits near +70° instead of −150°: a jump of about 140° about the O4–C4 bond, close to half a turn.</p>
+      <p>The two round drawings show it. At the normal joint C5 lies on one side of C1′. At the flipped joint C5, C3 and H4 have all swung round to the opposite side.</p>
+      <p>The two drawings above them show what that does to the ring. Ring 2 has turned over: it now shows you its opposite face. Crystallographers who first saw this in ring-shaped amyloses called it a <dfn>band flip</dfn>.</p>
+      <p>In a chain (bottom drawing) one flipped joint breaks the helix and sends the rest of the chain off in another direction. The more joints are flipped, the more often the chain changes direction and the smaller the space it spans. The third slider at the top sets what share of the joints is flipped in views 4 to 6.</p>
     </div>
   </section>
 
   <section class="step">
     <div class="fig">
       <canvas id="c4" height="400" aria-label="Energy of the joint as a function of the two angles"></canvas>
-      <div class="read"><span>average ψ of the unflipped joints <b id="r4psi"></b></span><span>flipped <b class="o" id="r4p"></b></span></div>
-      <div class="cap"><span class="key" style="background:var(--heat0)"></span>low energy <span class="key" style="background:var(--heat1);border:1px solid var(--line);margin-left:.8em"></span>10 kcal/mol or more <span class="key" style="background:var(--void);border:1px solid var(--line);margin-left:.8em"></span>excluded (a ring deforms). Circles: share of joints at that pair of angles at 303 K.</div>
+      <div class="seg" role="group" aria-label="Show the angles visited in the simulations">
+        <button type="button" id="ppC" aria-pressed="false">Show CHARMM36 simulation</button>
+        <button type="button" id="ppG" aria-pressed="false">Show GLYCAM06 simulation</button>
+      </div>
+      <div class="read"><span>averages of the unflipped joints: φ <b id="r4phi"></b></span><span>ψ <b class="o" id="r4psi"></b></span><span>flipped <b id="r4p"></b></span></div>
+      <div class="cap"><span class="key" style="background:var(--heat0)"></span>low energy <span class="key" style="background:var(--heat1);border:1px solid var(--line);margin-left:.8em"></span>10 kcal/mol or more <span class="key" style="background:var(--void);border:1px solid var(--line);margin-left:.8em"></span>excluded (a ring deforms). Circles: share of joints at that pair of angles at 303 K. Small dots, when switched on: 2500 pairs (φ, ψ) taken at random from the simulations in water. Click in the valley to set φ and ψ together.</div>
     </div>
     <div>
       <div class="num">4 · THE ENERGY</div>
       <h2>Which angles does the joint prefer? The energy for every pair (φ, ψ)</h2>
       <p>Each square is one calculation on two joined rings (methyl α-maltoside): φ and ψ are held at the values of that square, everything else is allowed to relax, and the energy is recorded. Here the method is GFN2-xTB, with water treated as a uniform dielectric medium and no water molecules. This grid of energies is what the paper calls <dfn>the map</dfn>.</p>
-      <p>The dark strip at φ ≈ 100° is <dfn>the valley</dfn>: along it ψ can go from −170° to −110° while the energy changes by less than 1 kcal/mol, about what heat supplies at 303 K. So the joints spread along the strip, and their average ψ is decided by very small energy differences. The ψ slider now moves that average.</p>
-      <p>The separate dark patch near ψ = +70° is the flipped position of view 3. Its energy relative to the valley decides how many joints are flipped. The second slider sets that share.</p>
+      <p>The dark strip at φ ≈ 100° is <dfn>the valley</dfn>: along it ψ can go from −170° to −110° while the energy changes by less than 1 kcal/mol, about what heat supplies at 303 K. So the joints spread along the strip, and their average ψ is decided by very small energy differences. From here on the φ and ψ sliders set the averages of the two angles, and each joint scatters around them.</p>
+      <p>The two angles do not move independently. Switch on the simulations: the cloud of visited pairs is tilted. When φ is larger, ψ is larger too, by about 0.6° per degree of φ in CHARMM36 (correlation 0.70) and 0.45° per degree in GLYCAM06 (correlation 0.47).</p>
+      <p>The separate dark patch near ψ = +70° is the flipped position of view 3. Its energy relative to the valley decides how many joints are flipped. The third slider sets that share.</p>
     </div>
   </section>
 
@@ -177,7 +200,7 @@ dfn{font-style:normal;font-weight:600}
     <div class="fig">
       <canvas id="c6" height="380" aria-label="Chain size for every combination of average angle and share of flipped joints"></canvas>
       <div class="read"><span>here: C<sub>∞</sub> × 0.73 = <b class="t" id="r6c"></b></span><span>measured <b class="t">3.9 – 5.8</b></span></div>
-      <div class="cap">Colour: C<sub>∞</sub> computed for every pair of settings (darker = larger chain). Green outline: the settings that reproduce the measured size. Cross: the sliders. Numbers: the methods listed on the right. Click anywhere to move the sliders there.</div>
+      <div class="cap">Colour: C<sub>∞</sub> computed for every pair of settings at the average φ of the top slider (darker = larger chain). Green outline: the settings that reproduce the measured size. Cross: the sliders. Numbers: the methods listed on the right. Click anywhere to move the sliders there.</div>
     </div>
     <div>
       <div class="num">6 · THE TWO NUMBERS TOGETHER</div>
@@ -310,10 +333,14 @@ function drawMol(id,mol,o){                    // o: Q, centre, span (Å across 
 // ---------- the map: weights, average angle, exact C_inf ----------
 const C=D.cells,NC=C.phi.length,kT=D.kT;
 const psiH=C.psi.map(p=>((p+117.8+180)%360+360)%360-180), syn=psiH.map(x=>Math.abs(x)<=90);
-function weights(k,p){let w=new Array(NC),ss=0,sa=0;for(let c=0;c<NC;c++){w[c]=Math.exp(-(C.E[c]+(syn[c]?k*(psiH[c]+32):0))/kT);if(syn[c])ss+=w[c];else sa+=w[c]}
+const mainWell=C.phi.map((f,c)=>syn[c]&&f>=40&&f<=160);
+function weights(k,p,kf=0){let w=new Array(NC),ss=0,sa=0;for(let c=0;c<NC;c++){w[c]=Math.exp(-(C.E[c]+(syn[c]?k*(psiH[c]+32):0)+(mainWell[c]?kf*(C.phi[c]-100):0))/kT);if(syn[c])ss+=w[c];else sa+=w[c]}
   for(let c=0;c<NC;c++)w[c]*=syn[c]?(1-p)/ss:p/sa;return w}
 function meanPsiH(w){let s=0,co=0;for(let c=0;c<NC;c++)if(syn[c]){s+=w[c]*Math.sin(psiH[c]*Math.PI/180);co+=w[c]*Math.cos(psiH[c]*Math.PI/180)}return Math.atan2(s,co)*180/Math.PI}
-function solveK(target){let lo=-0.08,hi=0.10;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(meanPsiH(weights(m,0.05))>target)lo=m;else hi=m}return (lo+hi)/2}
+function meanPhi(w){let s=0,n=0;for(let c=0;c<NC;c++)if(mainWell[c]){s+=w[c]*C.phi[c];n+=w[c]}return s/n}
+// two linear biases, one along psi and one along phi, chosen so that the averages of the unflipped joints hit the two sliders
+function solveBoth(tPsiH,tPhi){let k=0,kf=0;for(let r=0;r<3;r++){let lo=-0.08,hi=0.10;for(let i=0;i<30;i++){const m=(lo+hi)/2;if(meanPsiH(weights(m,0.05,kf))>tPsiH)lo=m;else hi=m}k=(lo+hi)/2;
+    lo=-0.12;hi=0.12;for(let i=0;i<30;i++){const m=(lo+hi)/2;if(meanPhi(weights(k,0.05,m))>tPhi)lo=m;else hi=m}kf=(lo+hi)/2}return [k,kf]}
 function inv3(m){const [a,b,c,d,e,f,g,h,i]=m;const A=e*i-f*h,B=-(d*i-f*g),Cc=d*h-e*g,det=a*A+b*B+c*Cc;return [A/det,-(b*i-c*h)/det,(b*f-c*e)/det,B/det,(a*i-c*g)/det,-(a*f-c*d)/det,Cc/det,-(a*h-b*g)/det,(a*e-b*d)/det]}
 function chainStats(w,n){const Rm=new Array(9).fill(0);for(let c=0;c<NC;c++){const R=C.Rbar[c];for(let j=0;j<9;j++)Rm[j]+=w[c]*R[j]}
   const v=D.v,l2=dot(v,v);const M=mul3(Rm,inv3(I3.map((x,j)=>x-Rm[j])));const Cinf=1+2*dot(v,rot(M,v))/l2;
@@ -328,7 +355,7 @@ const NCH=5,NRES=150,U=[],QCH=[];{const r=rng(20260930);for(let j=0;j<NCH;j++){U
 const el=id=>document.getElementById(id);
 const pFromSlider=s=>0.30*Math.pow(s/100,2), sliderFromP=p=>100*Math.sqrt(p/0.30);
 const natural=(()=>{const w=new Array(NC);let s=0,a=0;for(let c=0;c<NC;c++){w[c]=Math.exp(-C.E[c]/kT);s+=w[c];if(!syn[c])a+=w[c]}return a/s})();
-function state(){const psi=+el('psi').value,p=pFromSlider(+el('flip').value);const k=solveK(psi+117.8);const w=weights(k,p);return {psi,p,w,mean:meanPsiH(w)-117.8}}
+function state(){const psi=+el('psi').value,phi=+el('phi1').value,p=pFromSlider(+el('flip').value);const [k,kf]=solveBoth(psi+117.8,phi);const w=weights(k,p,kf);return {psi,phi,p,w,kf,mean:meanPsiH(w)-117.8,meanPhi:meanPhi(w)}}
 const fmt=(x,d=1)=>x.toFixed(d).replace('-','−');
 
 // one dial: the view straight down the bond front -> back; the reference substituent of the front atom is drawn upward,
@@ -357,6 +384,17 @@ function view1(S){const phi=+el('phi1').value;const mol=chainAtoms([stepT(phi,S.
       items:(P,g)=>{const b=(x,y,col)=>{const A=P(x),B=P(y);return {z:1e3,f:()=>{g.beginPath();g.moveTo(A[0],A[1]);g.lineTo(B[0],B[1]);g.strokeStyle=col;g.lineWidth=7;g.lineCap='round';g.stroke()}}};
         return [b(hp(0,'C1'),hp(0,'O1'),css('--blue')),b(hp(0,'O1'),hp(1,'C4'),css('--orange'))]},
       labels:P=>[[hp(0,'O5'),"O5′"],[hp(0,'C1'),"C1′"],[hp(0,'O1'),'O4'],[hp(1,'C4'),'C4'],[hp(1,'C5'),'C5']].map(([q,t])=>{const z=P(q);return {t,x:z[0]+4,y:z[1]-12,bold:true,plate:true,c:css('--ink')}})})}}
+// two rings at one joint, heavy atoms as sticks, each ring filled by the face it turns to the viewer
+const RINGN=['O5','C1','C2','C3','C4','C5'];
+function pairView(id,phi,psi){const m=chainAtoms([stepT(phi,psi)],true);const at=(k,nm)=>m.atoms.find(a=>a.res===k&&a.name===nm).p;
+  drawMol(id,m,{Q:QV0,centre:mean3(m.atoms.map(a=>a.p)),span:16,style:'stick',width:3.4,
+    items:(P,g)=>[0,1].map(k=>{const q=RINGN.map(nm=>P(at(k,nm)));let area=0;q.forEach((a,i)=>{const b=q[(i+1)%6];area+=a[0]*b[1]-b[0]*a[1]});
+      return {z:q.reduce((a,x)=>a+x[2],0)/6-.5,f:()=>{g.beginPath();q.forEach((x,i)=>i?g.lineTo(x[0],x[1]):g.moveTo(x[0],x[1]));g.closePath();g.fillStyle=area>0?css('--flipfill'):css('--blue-soft');g.fill()}}}),
+    labels:(P,w,h)=>{const a=P(mean3(RINGN.map(nm=>at(0,nm)))),b=P(mean3(RINGN.map(nm=>at(1,nm))));const o=P(at(0,'O1'));
+      return [{t:'ring 1',x:a[0],y:h-8},{t:'ring 2',x:b[0],y:h-8},{t:'O4',x:o[0],y:o[1]-12,bold:true,plate:true,c:css('--ink')}]}})}
+function psiDial(id,phi,psi){const m=chainAtoms([stepT(phi,psi)],false);const at=(k,nm)=>m.atoms.find(a=>a.res===k&&a.name===nm).p;
+  dial(id,at(0,'O1'),at(1,'C4'),[{p:at(0,'C1'),name:"C1′",ref:true}],[{p:at(1,'C5'),name:'C5',ref:true},{p:at(1,'C3'),name:'C3'},{p:at(1,'H4'),name:'H4'}],'ψ',css('--orange'))}
+function view3(S){pairView('f3a',S.phi,S.psi);pairView('f3b',90,70);psiDial('n3a',S.phi,S.psi);psiDial('n3b',90,70);el('r3phi').textContent=fmt(S.phi,0)+'°';el('r3psi').textContent=fmt(S.psi,0)+'°'}
 function helixView(id,S,flipAt){const A=stepT(+el('phi1').value,S.psi),h=helixOf(A);const tr=Array.from({length:19},(_,k)=>k===flipAt?D.flip:A);const res=buildChain(tr);
   const cen=res.map(r=>mean3(r.ring));const base=flipAt==null?cen:cen.slice(0,flipAt+1);const c0=mean3(base),call=mean3(cen);
   const off=sub(cen[0],c0);const perp=sub(off,sc(h.u,dot(off,h.u)));const Q=frameFrom(h.u,perp);
@@ -372,14 +410,15 @@ function view4(S){const c=el('c4'),{g,w,h}=setup(c);const mL=46,mB=34,mT=10,mR=1
   const box=(p0,p1,s0,s1,col,txt,tx,ty)=>{g.strokeStyle=col;g.lineWidth=2;g.setLineDash([5,3]);g.strokeRect(X(p0),Y(s1),(p1-p0+10)/10*cw,(ys(s1)-ys(s0)+10)/10*ch);g.setLineDash([]);g.fillStyle=col;g.font='600 13px '+css('--sans');g.textAlign='left';g.fillText(txt,tx,ty)};
   box(70,130,170,-100,css('--blue'),'the valley',X(-170),Y(-140)+4);box(50,110,40,90,css('--orange'),'flipped joint',X(-170),Y(70)+4);
   g.strokeStyle=css('--muted');g.lineWidth=1;[[X(-170)+62,Y(-140),X(70)-4,Y(-140)],[X(-170)+82,Y(70),X(50)-4,Y(70)]].forEach(L=>{g.beginPath();g.moveTo(L[0],L[1]);g.lineTo(L[2],L[3]);g.stroke()});
-  const ym=mT+(100-S.mean)/10*ch+ch/2;g.strokeStyle=css('--teal');g.lineWidth=2.5;g.beginPath();g.moveTo(X(60),ym);g.lineTo(X(140)+cw,ym);g.stroke();
-  g.fillStyle=css('--teal');g.font='600 12px '+css('--sans');g.textAlign='left';g.fillText('average ψ',X(140)+cw+4,ym+4);
+  ['CHARMM36','GLYCAM06'].forEach((ff,n)=>{if(!showPP[ff])return;g.fillStyle=n?css('--pageD'):css('--teal');g.globalAlpha=.55;D.pp[ff].pts.forEach(([a,b])=>{g.beginPath();g.arc(mL+(a+180)/10*cw+cw/2,mT+(100-ys(b))/10*ch+ch/2,1.5,0,7);g.fill()});g.globalAlpha=1});
+  const xm=mL+(S.meanPhi+180)/10*cw+cw/2,ym=mT+(100-S.mean)/10*ch+ch/2;g.strokeStyle=css('--teal');g.lineWidth=2.5;g.beginPath();g.moveTo(xm-16,ym);g.lineTo(xm+16,ym);g.moveTo(xm,ym-16);g.lineTo(xm,ym+16);g.stroke();
+  g.beginPath();g.arc(xm,ym,7,0,7);g.stroke();g.fillStyle=css('--teal');g.font='600 12px '+css('--sans');g.textAlign='right';g.fillText('averages (the sliders)',xm-20,ym+24);c._geo={mL,mT,cw,ch};
   g.fillStyle=css('--muted');g.font='12px '+css('--mono');g.textAlign='center';
   for(let p=-180;p<=180;p+=60)g.fillText(String(p).replace('-','−'),X(p),h-mB+16);
   g.textAlign='right';[[-240,'120'],[-180,'±180'],[-120,'−120'],[-60,'−60'],[0,'0'],[60,'60']].forEach(([v,t])=>g.fillText(t,mL-6,mT+(100-v)/10*ch+4));
   g.fillStyle=css('--ink');g.font='13px '+css('--sans');g.textAlign='center';g.fillText('φ (degrees)',mL+18*cw,h-4);
   g.save();g.translate(13,mT+18*ch);g.rotate(-Math.PI/2);g.fillText('ψ (degrees)',0,0);g.restore();
-  el('r4psi').textContent=fmt(S.mean,0)+'°';el('r4p').textContent=fmt(100*S.p)+' %'}
+  el('r4phi').textContent=fmt(S.meanPhi,0)+'°';el('r4psi').textContent=fmt(S.mean,0)+'°';el('r4p').textContent=fmt(100*S.p)+' %'}
 function view5(S){const st=chainStats(S.w,NRES-1);const c=el('c5'),{g,w,h}=setup(c);
   const cum=new Array(NC);let s=0;order.forEach((ci,i)=>{s+=S.w[ci];cum[i]=s});
   const pick=u=>{let lo=0,hi=NC-1;u*=s;while(lo<hi){const m=(lo+hi)>>1;if(cum[m]<u)lo=m+1;else hi=m}return order[lo]};
@@ -398,9 +437,9 @@ function view5(S){const st=chainStats(S.w,NRES-1);const c=el('c5'),{g,w,h}=setup
   el('gExp').style.left=pos(3.9)+'%';el('gExp').style.width=(pos(5.8)-pos(3.9))+'%';[1,2,5,10,20].forEach(v=>el('gt'+v).style.left=pos(v)+'%')}
 // ---- view 6: the plane of the two quantities
 const PG=[],SG=[];for(let x=-180;x<=-100;x+=2.5)PG.push(x);for(let y=0;y<=100;y+=5)SG.push(y);let GRID=null;
-const METHODS=[['GFN2-xTB map as computed (view 4)',-150,natural],['Same method, other continuum model (GBSA)',-120,.080],['GFN2-xTB, hydroxyls rearranged (view 7)',-116,.10],
-  ['DFT (r2SCAN), hydroxyls rearranged',-119,.002],['Simulation in water, CHARMM36',-144,.063],['Simulation in water, GLYCAM06',-147,.007],['Simulation in water, CSFF (published)',-153,.011]];
-function view6(S){if(!GRID){GRID=PG.map(ps=>{const k=solveK(ps+117.8);return SG.map(sv=>chainStats(weights(k,pFromSlider(sv)),2).Cinf)})}
+const METHODS=[['GFN2-xTB map as computed (view 4)',-150,natural,102],['Same method, other continuum model (GBSA)',-120,.080,94],['GFN2-xTB, hydroxyls rearranged (view 7)',-116,.10,100],
+  ['DFT (r2SCAN), hydroxyls rearranged',-119,.002,100],['Simulation in water, CHARMM36',-144,.063,89],['Simulation in water, GLYCAM06',-147,.007,78],['Simulation in water, CSFF (published)',-153,.011,69]];
+function view6(S){if(!GRID||GRID.phi!==S.phi){GRID=PG.map(ps=>{const [k,kf]=solveBoth(ps+117.8,S.phi);return SG.map(sv=>chainStats(weights(k,pFromSlider(sv),kf),2).Cinf)});GRID.phi=S.phi}
   const c=el('c6'),{g,w,h}=setup(c);const mL=50,mB=36,mT=8,mR=10,cw=(w-mL-mR)/PG.length,ch=(h-mT-mB)/SG.length;
   const X=ps=>mL+((ps+180)/2.5+.5)*cw,Y=sv=>h-mB-(sv/5+.5)*ch;c._geo={mL,mB,mT,cw,ch,h};
   const hex=q=>[1,3,5].map(i=>parseInt(q.slice(i,i+2),16)),a=hex(css('--heat1')),b=hex(css('--heat0'));
@@ -451,24 +490,29 @@ function view8(){const F=D.md.frames[+el('frame').value],n=F.tors.length+1;const
   drawMol('c8',molOf(md),{Q:frameFrom(ex,nrm),centre:mean3(cm.concat(cr)),span:46,style:'stick',width:3,ghost:molOf(rigid)});
   el('frameOut').textContent=fmt(F.t,0)+' ns';el('r8a').textContent=fmt(len(sub(cm[n-1],cm[0]))/10,2)+' nm';el('r8b').textContent=fmt(len(sub(cr[n-1],cr[0]))/10,2)+' nm';
   el('r8ang').textContent=fmt(F.bridge.reduce((a,b)=>a+b,0)/F.bridge.length,0)+'°'}
-function update(){const S=state();el('psiOut').textContent='ψ = '+fmt(S.psi)+'°';el('flipOut').textContent=fmt(100*S.p)+' %';
+function update(){const S=state();el('psiOut').textContent=fmt(S.psi)+'°';el('flipOut').textContent=fmt(100*S.p)+' %';
   view1(S);const h=helixView('c2',S,null);el('r2n').textContent=fmt(h.n);el('r2rise').textContent=fmt(h.rise,2)+' nm';el('r2len').textContent=fmt(19*h.rise)+' nm';
-  helixView('c3',S,9);view4(S);view5(S);view6(S);view7(S);view8()}
+  view3(S);helixView('c3',S,9);view4(S);view5(S);view6(S);view7(S);view8()}
 
 // ---------- controls ----------
+let showPP={CHARMM36:false,GLYCAM06:false};
 const chips=(id,items,apply)=>items.forEach(([t,v])=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',()=>{apply(v);update()});el(id).appendChild(b)});
 chips('psiChips',[['stretched −170°',-170],['energy map as computed −150°',-150],['simulations in water, crystal −145°',-145],['hydroxyls rearranged −117.5°',-117.5]],v=>el('psi').value=v);
+chips('phiChips',[['GLYCAM06 78°',78],['CHARMM36 89°',89],['energy map 102°',102]],v=>el('phi1').value=v);
 chips('flipChips',[['none',0],['GLYCAM06 simulation 0.7 %',.007],['CHARMM36 simulation 6.3 %',.063],['energy map 7.4 %',natural],['one in four',.25]],v=>el('flip').value=sliderFromP(v));
 el('flip').value=sliderFromP(natural);
 ['psi','flip','phi1','frame'].forEach(id=>el(id).addEventListener('input',update));
 [['ohScan','scan'],['ohBest','best']].forEach(([id,a])=>el(id).addEventListener('click',()=>{ohMode=a;el('ohScan').setAttribute('aria-pressed',a==='scan');el('ohBest').setAttribute('aria-pressed',a==='best');update()}));
-METHODS.forEach((m,n)=>{const li=document.createElement('li'),b=document.createElement('button');b.type='button';b.innerHTML='<span class="n">'+(n+1)+'</span><span>'+m[0]+'</span><span class="v">'+fmt(m[1],0)+'°, '+fmt(100*m[2],1)+' %</span>';
-  b.addEventListener('click',()=>{el('psi').value=Math.round(m[1]/2.5)*2.5;el('flip').value=sliderFromP(m[2]);update()});li.appendChild(b);el('methods').appendChild(li)});
+METHODS.forEach((m,n)=>{const li=document.createElement('li'),b=document.createElement('button');b.type='button';b.innerHTML='<span class="n">'+(n+1)+'</span><span>'+m[0]+'</span><span class="v">φ '+m[3]+'°, ψ '+fmt(m[1],0)+'°, '+fmt(100*m[2],1)+' %</span>';
+  b.addEventListener('click',()=>{el('psi').value=Math.round(m[1]/2.5)*2.5;el('phi1').value=m[3];el('flip').value=sliderFromP(m[2]);update()});li.appendChild(b);el('methods').appendChild(li)});
 el('c6').addEventListener('click',e=>{const c=el('c6'),r=c.getBoundingClientRect(),G=c._geo;if(!G)return;const i=Math.floor((e.clientX-r.left-G.mL)/G.cw),j=Math.floor((G.h-G.mB-(e.clientY-r.top))/G.ch);
   if(i<0||j<0||i>=PG.length||j>=SG.length)return;el('psi').value=PG[i];el('flip').value=SG[j];update()});el('c6').style.cursor='crosshair';
 el('d3').addEventListener('toggle',update);
+[['ppC','CHARMM36'],['ppG','GLYCAM06']].forEach(([id,ff])=>el(id).addEventListener('click',()=>{showPP[ff]=!showPP[ff];el(id).setAttribute('aria-pressed',showPP[ff]);update()}));
+el('c4').addEventListener('click',e=>{const c=el('c4'),r=c.getBoundingClientRect(),G=c._geo;if(!G)return;const f=-180+Math.floor((e.clientX-r.left-G.mL)/G.cw)*10,pv=100-Math.floor((e.clientY-r.top-G.mT)/G.ch)*10;
+  if(f<60||f>140||pv>-100||pv<-180)return;el('phi1').value=f;el('psi').value=pv;update()});el('c4').style.cursor='crosshair';
 {const a=stepT(100,-150),b=valleyT(-150);console.log('builder check, max difference from the exported transform:',Math.max(...a.map((x,i)=>Math.abs(x-b[i]))).toExponential(2))}
-document.querySelectorAll('canvas').forEach(c=>{if(['c4','nphi','npsi','c6','c7p'].includes(c.id))return;let d=null;c.style.cursor='grab';
+document.querySelectorAll('canvas').forEach(c=>{if(['c4','nphi','npsi','n3a','n3b','c6','c7p'].includes(c.id))return;let d=null;c.style.cursor='grab';
   c.addEventListener('pointerdown',e=>{d={x:e.clientX,y:e.clientY,v:{...(views[c.id]||{yaw:0,pitch:0})}};c.setPointerCapture(e.pointerId)});
   c.addEventListener('pointermove',e=>{if(!d)return;views[c.id]={yaw:d.v.yaw+(e.clientX-d.x)*.01,pitch:d.v.pitch+(e.pointerType==='touch'?0:(e.clientY-d.y)*.01)};update()});
   ['pointerup','pointercancel'].forEach(t=>c.addEventListener(t,()=>d=null))});
