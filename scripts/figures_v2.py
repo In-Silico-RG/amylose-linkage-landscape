@@ -18,6 +18,10 @@ spec = importlib.util.spec_from_file_location("ma", CH / "map_analysis.py"); ma 
 spec = importlib.util.spec_from_file_location("db", CH / "dft_benchmark.py"); db = importlib.util.module_from_spec(spec); spec.loader.exec_module(db)
 J = lambda n: json.load(open(RES / n))
 BLUE, ORANGE, TEAL, GREY, YEL, MAG = "#2a78d6", "#eb6834", "#1baf7a", "0.45", "#eda100", "#e87ba4"
+# Experimental C_inf band on the 0.454 nm bond (as measured, flexible chains) and in rigid-ring units:
+# ring/bridge flexibility lowers the rigid-ring C_inf by 26-28 % (SI Table S9: SC6 9.0->6.7, SC18 7.4->5.3),
+# so rigid-ring values are compared with the band divided by 0.73 (Kimi r6 W1, 2026-09-24).
+EXP = (3.9, 5.8); RING = 0.73; EXP_RIG = (round(EXP[0] / RING, 1), round(EXP[1] / RING, 1))
 plt.rcParams.update({"font.size": 7.5, "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": 0.6, "xtick.major.width": 0.6, "ytick.major.width": 0.6, "legend.frameon": False})
 T = Template(str(CH / "maltose_a.xyz")); m = Chem.AddHs(Chem.MolFromSmiles(SMILES))
 NAMES = {2: "C1", 22: "C2", 20: "C3", 7: "C4", 4: "C5", 3: "O5", 8: "O4", 9: "C1′", 18: "C2′", 16: "C3′", 14: "C4′", 11: "C5′", 10: "O5′", 15: "O4′", 32: "H4", 33: "H1′"}
@@ -160,10 +164,15 @@ def F3():
         r = {**J(small)["results"], **J(big)["results"]}; N = sorted(int(n) for n in r)
         ax.errorbar(N, [r[str(n)]["Cn"] for n in N], yerr=[r[str(n)]["Cn_se"] for n in N], fmt="o-", color=col, ms=2.5, lw=1, label=lab); ax.axhline(ex[key]["Cinf"], color=col, ls=":", lw=0.8)
     ev = ([18, 40, 100, 200, 400], [5.76, 7.00, 8.42, 9.45, 10.41]); ax.plot(*ev, "^--", color=BLUE, ms=3, lw=0.9, mfc="white", label="+ excluded volume, 0.25 nm")
-    ax.axhspan(3.9, 5.8, color="0.9", zorder=0); ax.text(7, 4.85, "experiment\n(this bond)", fontsize=6, color="0.4", va="center")
+    ax.axhspan(*EXP_RIG, color="0.9", zorder=0); ax.text(7, EXP_RIG[1] - 0.12, "experiment, rigid-ring units", fontsize=5.5, color="0.4", va="top")
+    for y in EXP: ax.axhline(y, color="0.55", ls="--", lw=0.5, zorder=0)
+    ax.text(300, EXP[0] + 0.15, "as measured (for MD)", fontsize=5, color="0.45", ha="center", va="bottom")
     for s_ in ["SC6", "SC12", "SC18", "SC24", "DC6"]:
         d = J(f"{s_}_O4.json"); ax.plot(d["N"], d["Cn"], "D", color="0.3", ms=3.5, zorder=5)
-    ax.text(5.5, 2.3, "MD", fontsize=6.5, color="0.3")
+    ax.text(5.5, 2.3, "MD, 10 ns (not converged)", fontsize=6, color="0.3")
+    for n_, key in ((6, "SC6_charmm_rep"), (12, "SC12_charmm_rep")):          # five 100-ns replicas (2026-09-30)
+        g = J(f"replica_{key}.json")["group"]["Cn_meas"]; ax.errorbar([n_], [g["mean"]], yerr=[g["se"]], fmt="D", color=TEAL, ms=4, mec="k", mew=0.5, capsize=1.5, zorder=6)
+    ax.text(40, 3.2, "MD, 5 × 100 ns", fontsize=6, color=TEAL, va="center")
     ax.set_xscale("log"); ax.set_xlabel("residues N"); ax.set_ylabel("$C_n$"); ax.set_ylim(2, 14.5); ax.legend(fontsize=5.6, loc="upper left"); panel(ax, "a", "MC chains from the map")
     # b: shape ratio and nu
     ax = fig.add_subplot(gs[0, 1]); r = {**J("mc_scan2_10deg.json")["results"], **J("mc_scan2_10deg_big.json")["results"]}; N = sorted(int(n) for n in r)
@@ -191,27 +200,30 @@ def F4():
     """The two numbers of the map and the plane."""
     fig = plt.figure(figsize=(7.2, 3.0)); gs = fig.add_gridspec(1, 3, wspace=0.42)
     ax = fig.add_subplot(gs[0, 0]); rows = J("cinf_vs_synvalley.json"); x = np.array([r["mean_psiH"] for r in rows]); c = np.array([r["Cinf"] for r in rows]); o = np.argsort(x); x, c = x[o], c[o]
-    ax.plot(x, c, "-", color="0.15", lw=1.5); ax.axhspan(3.9, 5.8, color="0.9", zorder=0)
-    for xv, lab, col, mk in ((-32, "xtb/ALPB", BLUE, "o"), (-2, "xtb/GBSA", BLUE, "s"), (5, "xtb, vacuum", BLUE, "^"), (-28, "CHARMM36 MD", TEAL, "D"), (-35, "CSFF/TIP3P PMF", ORANGE, "o"), (-25, "CSFF vacuum", ORANGE, "s"), (-30, "CHARMM36 map", TEAL, "^"), (-27, "B-amylose crystal", "0.4", "x")):
+    ax.plot(x, c, "-", color="0.15", lw=1.5); ax.axhspan(*EXP_RIG, color="0.9", zorder=0)
+    for xv, lab, col, mk in ((-32, "xtb/ALPB", BLUE, "o"), (-2, "xtb/GBSA", BLUE, "s"), (5, "xtb, vacuum", BLUE, "^"), (-26, "CHARMM36 MD", TEAL, "D"), (-30, "GLYCAM06 MD", ORANGE, "D"), (-35, "CSFF/TIP3P PMF", ORANGE, "o"), (-25, "CSFF vacuum", ORANGE, "s"), (-30, "CHARMM36 map", TEAL, "^"), (-27, "B-amylose crystal", "0.4", "x")):
         yv = np.interp(xv, x, c); ax.plot(xv, yv, mk, color=col, ms=5, mfc=("white" if mk != "x" else col), mew=1.3, label=lab)
-    dc = J("dft_compare.json")["corrected"]; ax.plot(dc["mean_psiH"], dc["Cinf"], "v", color=BLUE, ms=5.5, mfc=BLUE, mew=1.0, label="r2SCAN-corrected map")
+    oc = J("oh_compare.json")["corrected"]; best = lambda k: oc[k].get("anti shifted", oc[k]["p fixed"])     # hydroxyl networks sampled (2026-09-30)
+    dx, dd = best("xtb best network"), best("TZVP-D3 // 3c, best of 6")
+    ax.plot(dx["mean_psiH"], dx["Cinf"], "v", color=BLUE, ms=5.5, mfc=BLUE, mew=1.0, label="xtb, OH sampled")
+    ax.plot(dd["mean_psiH"], dd["Cinf"], "^", color="k", ms=5.5, mfc="k", mew=1.0, label="DFT, OH sampled")
     ax.set_yscale("log"); ax.set_ylim(0.4, 60); ax.set_yticks([0.5, 1, 2, 5, 10, 20, 50]); ax.set_yticklabels(["0.5", "1", "2", "5", "10", "20", "50"]); ax.invert_xaxis()
-    ax.set_xlabel("mean ψ$_H$ of the syn population (°)"); ax.set_ylabel("$C_\\infty$ (rigid ring)"); ax.legend(fontsize=5.2, loc="upper left"); panel(ax, "a", "first number: valley position")
-    ax.text(0.98, 0.03, "grey: experiment,\nthis bond convention", transform=ax.transAxes, fontsize=5.5, ha="right", va="bottom", color="0.4")
+    ax.set_xlabel("mean ψ$_H$ of the syn population (°)"); ax.set_ylabel("$C_\\infty$ (rigid ring)"); ax.legend(fontsize=4.7, loc="upper left", labelspacing=0.15, handletextpad=0.3, borderaxespad=0.1, markerscale=0.85); panel(ax, "a", "first number: valley position")
+    ax.text(0.98, 0.03, "grey: experiment,\nrigid-ring units", transform=ax.transAxes, fontsize=5.5, ha="right", va="bottom", color="0.4")
     ax = fig.add_subplot(gs[0, 1]); rows = J("cinf_vs_antipsi.json"); p = np.array([r["p_anti"] for r in rows]) * 100; c = np.array([r["Cinf"] for r in rows])
-    ax.plot(p, c, "-", color="0.15", lw=1.5); ax.axhspan(3.9, 5.8, color="0.9", zorder=0)
-    for xv, lab, col, mk in ((7.4, "xtb/ALPB", BLUE, "o"), (8.0, "CHARMM36 MD (8 ± 3 %)", TEAL, "D"), (7.6, "CHARMM36 map, Lutsyk", TEAL, "s"), (1.06, "CSFF/TIP3P PMF", ORANGE, "o"), (0.75, "GLYCAM06 map, Lutsyk", ORANGE, "s"), (4.0, "GLYCAM06 MD, Sattelle", ORANGE, "D")):
+    ax.plot(p, c, "-", color="0.15", lw=1.5); ax.axhspan(*EXP_RIG, color="0.9", zorder=0)
+    for xv, lab, col, mk in ((7.4, "xtb/ALPB", BLUE, "o"), (6.3, "CHARMM36 MD, this work", TEAL, "D"), (7.6, "CHARMM36 map, Lutsyk", TEAL, "s"), (1.06, "CSFF/TIP3P PMF", ORANGE, "o"), (0.75, "GLYCAM06 map, Lutsyk", ORANGE, "s"), (4.0, "GLYCAM06 MD, Sattelle", ORANGE, "D"), (0.7, "GLYCAM06 MD, this work", ORANGE, "v")):
         yv = np.interp(xv, p[::-1], c[::-1]); ax.plot(xv, yv, mk, color=col, ms=5, mfc="white", mew=1.3, label=lab)
     ax.set_xscale("log"); ax.set_xlim(0.1, 50); ax.set_xticks([0.1, 0.3, 1, 3, 10, 30]); ax.set_xticklabels(["0.1", "0.3", "1", "3", "10", "30"]); ax.set_ylim(4, 12)
     ax.set_xlabel("band-flip population (%)"); ax.set_ylabel("$C_\\infty$ (rigid ring)"); ax.legend(fontsize=5.2, loc="lower left", framealpha=0.9); panel(ax, "b", "second number: band flips")
     ax = fig.add_subplot(gs[0, 2]); rows = J("cinf_grid_psi_p.json"); ps = sorted(set(q["p"] for q in rows)); ks = sorted(set(q["k"] for q in rows))
     X = np.array([[next(q["mean_psiH"] for q in rows if q["k"] == k and q["p"] == pp) for pp in ps] for k in ks]); Y = np.array([[pp * 100 for pp in ps] for k in ks]); Z = np.array([[next(q["Cinf"] for q in rows if q["k"] == k and q["p"] == pp) for pp in ps] for k in ks])
     ax.contourf(X, Y, np.log10(Z), levels=np.linspace(0, 1.6, 17), cmap="Blues"); cs = ax.contour(X, Y, Z, levels=[2, 3, 4, 6, 8, 12, 20], colors="0.2", linewidths=0.5); ax.clabel(cs, fmt="%g", fontsize=5.5)
-    ax.contour(X, Y, Z, levels=[3.9, 5.8], colors=ORANGE, linewidths=1.3)
-    ax.plot(-32, 7.4, "o", color="white", mec="k", ms=6, label="xtb/ALPB"); ax.plot(-2, 8.0, "s", color="white", mec="k", ms=6, label="xtb/GBSA"); ax.plot(-28, 8.0, "D", color=TEAL, mec="k", ms=6, label="CHARMM36 MD"); ax.plot(dc["mean_psiH"], dc["p_anti"] * 100, "v", color=BLUE, mec="k", ms=6, label="r2SCAN-corrected")
-    ax.text(-3, 22, "flexible ring:\nC∞ lower by 30 %", fontsize=5.5, color="0.2", ha="left", va="center", bbox=dict(fc="white", ec="none", alpha=0.85, pad=0.3))
+    ax.contour(X, Y, Z, levels=list(EXP_RIG), colors=ORANGE, linewidths=1.3)
+    ax.plot(-32, 7.4, "o", color="white", mec="k", ms=6, label="xtb/ALPB"); ax.plot(-2, 8.0, "s", color="white", mec="k", ms=6, label="xtb/GBSA"); ax.plot(-26, 6.3, "D", color=TEAL, mec="k", ms=6, label="CHARMM36 MD"); ax.plot(-30, 0.7, "D", color=ORANGE, mec="k", ms=6, label="GLYCAM06 MD"); ax.plot(dx["mean_psiH"], dx["p_anti"] * 100, "v", color=BLUE, mec="k", ms=6, label="xtb, OH sampled"); ax.plot(dd["mean_psiH"], dd["p_anti"] * 100, "^", color="k", mec="k", ms=6, label="r2SCAN-D3, OH sampled")
+    ax.text(-3, 22, "orange: experiment\n÷ 0.73 (rigid ring)", fontsize=5.5, color="0.2", ha="left", va="center", bbox=dict(fc="white", ec="none", alpha=0.85, pad=0.3))
     ax.set_yscale("symlog", linthresh=1); ax.set_ylim(0, 30); ax.set_yticks([0, 1, 3, 10, 30]); ax.set_yticklabels(["0", "1", "3", "10", "30"]); ax.invert_xaxis()
-    ax.set_xlabel("mean ψ$_H$ of the syn population (°)"); ax.set_ylabel("band-flip population (%)"); ax.legend(fontsize=5.2, loc="lower left", framealpha=0.9); panel(ax, "c", "the plane (orange: experiment)")
+    ax.set_xlabel("mean ψ$_H$ of the syn population (°)"); ax.set_ylabel("band-flip population (%)"); ax.legend(fontsize=4.9, loc="lower right", frameon=True, framealpha=0.85, edgecolor="none", labelspacing=0.2, borderaxespad=0.2); panel(ax, "c", "the plane (orange: experiment)")
     for ext in ("png", "pdf"): fig.savefig(FIG / f"F4_two_numbers.{ext}", dpi=250, bbox_inches="tight")
     print("F4 done")
 

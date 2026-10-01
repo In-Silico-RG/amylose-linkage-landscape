@@ -1,0 +1,10 @@
+! r2SCAN-3c TightSCF Opt CPCM(water)
+%pal nprocs 6 end
+%maxcore 3500
+%geom
+  Constraints
+    { D 10 9 8 7 C }
+    { D 9 8 7 4 C }
+  end
+end
+* xyzfile 0 1 frame.xyz

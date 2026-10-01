@@ -1,0 +1,295 @@
+<title>Amylose Joint Explorer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* layout: a sticky control strip (two sliders) over five numbered views, each a drawing beside a short text */
+:root{
+  --bg:#f6f8fa; --panel:#ffffff; --ink:#18222d; --muted:#5a6876; --line:#d5dce3;
+  --blue:#2a78d6; --blue-soft:#cfe2f8; --orange:#eb6834; --teal:#12996b; --band:#dff3ea;
+  --heat0:#143a66; --heat1:#e9f0f7; --void:#eceff2; --dot:#ffffff; --dotline:#18222d;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#10161c; --panel:#18212a; --ink:#e6edf3; --muted:#9aa8b5; --line:#2c3945;
+  --blue:#5aa2f0; --blue-soft:#1f3a57; --orange:#f58a5c; --teal:#3fc79a; --band:#173a2e;
+  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#10161c; --panel:#18212a; --ink:#e6edf3; --muted:#9aa8b5; --line:#2c3945;
+  --blue:#5aa2f0; --blue-soft:#1f3a57; --orange:#f58a5c; --teal:#3fc79a; --band:#173a2e;
+  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:28px 60px;display:flex;flex-direction:column;gap:22px}
+h1{font-size:1.7rem;font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
+.lede{color:var(--muted);max-width:68ch;margin:0}
+.controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px 28px}
+.ctl{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ctl label{font-weight:600;font-size:.92rem;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.ctl output{font-family:var(--mono);font-weight:500;color:var(--blue);white-space:nowrap}
+.ctl.flip output{color:var(--orange)}
+input[type=range]{width:100%;accent-color:var(--blue);margin:0}
+.ctl.flip input[type=range]{accent-color:var(--orange)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:inherit;font-size:.78rem;padding:2px 9px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.chips button:hover{border-color:var(--blue)} .chips button:focus-visible, input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.step{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:start;border-top:1px solid var(--line);padding-top:20px}
+.step h2{font-size:1.15rem;font-weight:600;margin:0 0 6px;text-wrap:balance}
+.num{font-family:var(--mono);color:var(--muted);font-size:.85rem;letter-spacing:.04em}
+.step p{margin:0 0 10px;max-width:60ch} .step p:last-child{margin-bottom:0}
+.fig{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px;min-width:0}
+canvas{display:block;width:100%;touch-action:pan-y;border-radius:6px}
+.cap{font-size:.8rem;color:var(--muted);padding:0 4px 2px}
+.read{font-family:var(--mono);font-size:.86rem;font-variant-numeric:tabular-nums;display:flex;flex-wrap:wrap;gap:4px 18px;padding:2px 4px}
+.read b{font-weight:500;color:var(--blue)} .read b.o{color:var(--orange)} .read b.t{color:var(--teal)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gauge{position:relative;height:50px;margin:6px 14px 8px}
+.gauge .axis{position:absolute;left:0;right:0;top:20px;height:8px;background:var(--void);border-radius:4px}
+.gauge .exp{position:absolute;top:14px;height:20px;background:var(--band);border:1px solid var(--teal);border-radius:4px}
+.gauge .val{position:absolute;top:8px;width:3px;height:32px;background:var(--blue);border-radius:2px;transform:translateX(-1px)}
+.gauge .tick{position:absolute;top:32px;font-family:var(--mono);font-size:.7rem;color:var(--muted);transform:translateX(-50%)}
+.key{display:inline-block;width:.8em;height:.8em;border-radius:2px;vertical-align:-.05em;margin-right:.3em}
+dfn{font-style:normal;font-weight:600}
+@media (max-width:760px){ .step{grid-template-columns:1fr} .controls{grid-template-columns:1fr} .two{grid-template-columns:1fr} h1{font-size:1.4rem} }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>How one joint between two glucose rings decides the size of an amylose chain</h1>
+    <p class="lede">Five drawings, all computed from the geometry and the energies used in the paper. The two sliders stay at the top: move them and every drawing follows. Drag a molecule to turn it.</p>
+  </header>
+
+  <div class="controls" role="group" aria-label="The two quantities">
+    <div class="ctl">
+      <label for="psi">Angle ψ of the joint <output id="psiOut" for="psi"></output></label>
+      <input id="psi" type="range" min="-180" max="-100" step="2.5" value="-150">
+      <div class="chips" id="psiChips"></div>
+    </div>
+    <div class="ctl flip">
+      <label for="flip">Joints in the flipped position <output id="flipOut" for="flip"></output></label>
+      <input id="flip" type="range" min="0" max="100" step="1" value="50">
+      <div class="chips" id="flipChips"></div>
+    </div>
+  </div>
+
+  <section class="step">
+    <div class="fig">
+      <canvas id="c1" height="340" aria-label="Two glucose rings joined by one oxygen"></canvas>
+      <div class="read"><span>φ = <b>100°</b> (held)</span><span>ψ = <b id="r1psi"></b></span></div>
+      <div class="cap">Blue dot: the oxygen inside each ring (O5). Black dot: the oxygen the two rings share. Hydrogens and hydroxyl groups are not drawn. The stub on each ring is its CH₂OH group, so you can tell which face is up.</div>
+    </div>
+    <div>
+      <div class="num">1 · THE JOINT</div>
+      <h2>Two rings, one shared oxygen, two angles</h2>
+      <p>Neighbouring glucose rings in amylose are connected through a single oxygen: C1 of one ring, the oxygen, C4 of the next. Each ring is stiff. The only way the second ring can move relative to the first is by rotation about the two bonds to that oxygen.</p>
+      <p><dfn>φ</dfn> is the rotation about the C1–O bond (dihedral O5–C1–O–C4). <dfn>ψ</dfn> is the rotation about the O–C4 bond (dihedral C1–O–C4–C5), the bond drawn thick. φ hardly varies in amylose, about 100°. ψ is the angle that matters here.</p>
+      <p>Move the ψ slider. The left ring stays put and the right ring swings about the thick bond. That motion is everything the rest of this page is about.</p>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="fig">
+      <canvas id="c2" height="230" aria-label="Twenty rings with the same angle at every joint: a regular helix"></canvas>
+      <div class="read"><span>rings per turn <b id="r2n"></b></span><span>advance per ring <b id="r2rise"></b></span><span>length of 20 rings <b id="r2len"></b></span></div>
+      <div class="cap">Twenty rings, the same φ and ψ at all nineteen joints. Same scale at every setting.</div>
+    </div>
+    <div>
+      <div class="num">2 · REPEAT IT</div>
+      <h2>The same angle at every joint makes a helix, and ψ sets how stretched it is</h2>
+      <p>Repeat one joint identically along the chain and the result is always a regular helix. Which helix depends on ψ.</p>
+      <p>At ψ = −170° the helix is stretched: about 5.5 rings per turn, each ring advancing 0.42 nm. At ψ = −120° it is tightly wound: 9 rings per turn, each advancing only 0.16 nm. Twenty rings span 8 nm in one case and 3 nm in the other. Nothing else changed, only ψ, by 50°.</p>
+      <p>This is why the paper cares so much about the value of ψ: it is the length of the chain per ring.</p>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="fig">
+      <canvas id="c3" height="330" aria-label="The same helix with one joint flipped: a kink"></canvas>
+      <div class="read"><span>flipped joint: φ = <b class="o">90°</b>, ψ = <b class="o">+70°</b></span></div>
+      <div class="cap">The same twenty rings, with the tenth joint alone set to ψ = +70°. Rings after the flip are drawn in orange.</div>
+    </div>
+    <div>
+      <div class="num">3 · THE FLIP</div>
+      <h2>One joint turned by half a turn puts a kink in the chain</h2>
+      <p>The joint has a second position it can occupy, with ψ near +70°, roughly half a turn away from the usual one. The next ring is then upside down relative to its neighbour. Crystallographers who first saw it called it a <dfn>band flip</dfn>.</p>
+      <p>In a chain, one flipped joint breaks the helix and sends the rest of the chain off in another direction. The more joints are flipped, the more often the chain changes direction and the smaller the space it spans.</p>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="fig">
+      <canvas id="c4" height="400" aria-label="Energy of the joint as a function of the two angles"></canvas>
+      <div class="read"><span>average ψ of the unflipped joints <b id="r4psi"></b></span><span>flipped <b class="o" id="r4p"></b></span></div>
+      <div class="cap"><span class="key" style="background:var(--heat0)"></span>low energy <span class="key" style="background:var(--heat1);border:1px solid var(--line);margin-left:.8em"></span>10 kcal/mol or more <span class="key" style="background:var(--void);border:1px solid var(--line);margin-left:.8em"></span>excluded (a ring deforms). Circles: share of joints at that pair of angles at 303 K.</div>
+    </div>
+    <div>
+      <div class="num">4 · THE ENERGY</div>
+      <h2>Which angles does the joint prefer? The energy for every pair (φ, ψ)</h2>
+      <p>Each square is one calculation on two joined rings (methyl α-maltoside): φ and ψ are held at the values of that square, everything else is allowed to relax, and the energy is recorded. Here the method is GFN2-xTB, with water treated as a uniform dielectric medium and no water molecules. This grid of energies is what the paper calls <dfn>the map</dfn>.</p>
+      <p>The dark strip at φ ≈ 100° is <dfn>the valley</dfn>: along it ψ can go from −170° to −110° while the energy changes by less than 1 kcal/mol, about what heat supplies at 303 K. So the joints spread along the strip, and their average ψ is decided by very small energy differences. The ψ slider now moves that average.</p>
+      <p>The separate dark patch near ψ = +70° is the flipped position of view 3. Its energy relative to the valley decides how many joints are flipped. The second slider sets that share.</p>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="fig">
+      <canvas id="c5" height="380" aria-label="Random chains of 150 rings at 303 K"></canvas>
+      <div class="read"><span>C<sub>∞</sub> rigid rings <b id="r5c"></b></span><span>× 0.73 for flexible rings <b class="t" id="r5cf"></b></span><span>measured <b class="t">3.9 – 5.8</b></span></div>
+      <div class="gauge" aria-hidden="true"><div class="axis"></div><div class="exp" id="gExp"></div><div class="val" id="gVal"></div><span class="tick" style="left:0%">0.5</span><span class="tick" id="gt1">1</span><span class="tick" id="gt2">2</span><span class="tick" id="gt5">5</span><span class="tick" id="gt10">10</span><span class="tick" id="gt20">20</span><span class="tick" style="left:100%">40</span></div>
+      <div class="cap">Five chains of 150 rings, each joint drawn at random from the squares of view 4 with their shares. Dashed circle: typical end-to-end distance. Orange dots: flipped joints. Same scale at every setting; the bar is 10 nm.</div>
+    </div>
+    <div>
+      <div class="num">5 · THE REAL CHAIN</div>
+      <h2>With heat, every joint is a little different, and the helix becomes a coil</h2>
+      <p>In solution each joint takes its own angles from the distribution of view 4. The helix survives for about one turn and then the chain wanders. What remains measurable is its overall size.</p>
+      <p>The standard measure is the <dfn>characteristic ratio C<sub>∞</sub></dfn>: the mean square end-to-end distance divided by (number of joints × square of the ring-to-ring distance). A chain with no stiffness at all has C<sub>∞</sub> = 1. The paper computes it exactly from the distribution; the number shown is that calculation, redone here.</p>
+      <p>Now move the two sliders. Shifting the average ψ by 30° changes C<sub>∞</sub> about fourfold. Going from no flips to one joint in four roughly halves it. Those are the <dfn>two numbers</dfn> of the paper's title. The buttons under the sliders put them where each method puts them.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+const D = /*DATA*/null;
+// ---------- small linear algebra (rotation 3x3 row-major + translation) ----------
+const mul3 = (a,b)=>{const r=new Array(9);for(let i=0;i<3;i++)for(let j=0;j<3;j++)r[3*i+j]=a[3*i]*b[j]+a[3*i+1]*b[3+j]+a[3*i+2]*b[6+j];return r};
+const rot = (R,p)=>[R[0]*p[0]+R[1]*p[1]+R[2]*p[2],R[3]*p[0]+R[4]*p[1]+R[5]*p[2],R[6]*p[0]+R[7]*p[1]+R[8]*p[2]];
+const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], sc=(a,s)=>[a[0]*s,a[1]*s,a[2]*s];
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const norm=a=>{const n=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/n,a[1]/n,a[2]/n]};
+const I3=[1,0,0,0,1,0,0,0,1];
+const T_R=t=>t.slice(0,9), T_t=t=>t.slice(9,12);
+const compose=(G,A)=>({R:mul3(G.R,T_R(A)),t:add(rot(G.R,T_t(A)),G.t)});
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const mean3=ps=>sc(ps.reduce(add,[0,0,0]),1/ps.length);
+
+// ---------- chain building ----------
+function buildChain(transforms){            // transforms: one 12-vector per joint
+  let G={R:I3.slice(),t:[0,0,0]}; const res=[];
+  const place=G=>({ring:D.ring.map(p=>add(rot(G.R,p),G.t)),O4:add(rot(G.R,D.O4),G.t),Og:add(rot(G.R,D.Og),G.t),C6:add(rot(G.R,D.C6),G.t),O6:add(rot(G.R,D.O6),G.t)});
+  res.push(place(G));
+  for(const A of transforms){G=compose(G,A);res.push(place(G))}
+  return res;
+}
+function valleyT(psi){const g=D.valley.psi;let i=Math.round((psi-g[0])/(g[1]-g[0]));i=Math.max(0,Math.min(g.length-1,i));return D.valley.T[i]}
+function helixOf(A){const R=T_R(A),t=T_t(A);const th=Math.acos(Math.max(-1,Math.min(1,(R[0]+R[4]+R[8]-1)/2)));
+  let u=norm([R[7]-R[5],R[2]-R[6],R[3]-R[1]]);let rise=dot(t,u);if(rise<0){u=sc(u,-1);rise=-rise}
+  return {n:2*Math.PI/th,rise:rise/10,u}}
+
+// ---------- 3D drawing ----------
+const views={};                                // per canvas: yaw, pitch from dragging
+function setup(c){const dpr=window.devicePixelRatio||1,w=c.clientWidth,h=+c.getAttribute('height');c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);c.style.height=h+'px';
+  const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,w,h);return {g,w,h}}
+function userRot(id){const v=views[id]||{yaw:0,pitch:0};const cy=Math.cos(v.yaw),sy=Math.sin(v.yaw),cp=Math.cos(v.pitch),sp=Math.sin(v.pitch);
+  return mul3([1,0,0,0,cp,-sp,0,sp,cp],[cy,0,sy,0,1,0,-sy,0,cy])}
+function frameFrom(ex,ey){ex=norm(ex);ey=norm(sub(ey,sc(ex,dot(ey,ex))));const ez=cross(ex,ey);return [ex[0],ex[1],ex[2],ey[0],ey[1],ey[2],ez[0],ez[1],ez[2]]}
+function draw3D(id,res,o){                     // o: {Q base view, centre, span Å, colors per residue, labels}
+  const c=document.getElementById(id),{g,w,h}=setup(c);const Q=mul3(userRot(id),o.Q);const s=w/o.span;
+  const P=p=>{const q=rot(Q,sub(p,o.centre));return [w/2+(o.dx||0)+q[0]*s,h/2-q[1]*s,q[2]]};
+  const items=[];const ink=css('--ink'),line=css('--line');
+  res.forEach((r,k)=>{const col=o.color(k);const ring=r.ring.map(P);
+    items.push({z:ring.reduce((a,p)=>a+p[2],0)/6,f:()=>{g.beginPath();ring.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fillStyle=col.fill;g.globalAlpha=.88;g.fill();g.globalAlpha=1;g.strokeStyle=col.edge;g.lineWidth=1.4;g.stroke();
+      const o5=ring[D.ix.O5];g.beginPath();g.arc(o5[0],o5[1],Math.max(2,s*.28),0,7);g.fillStyle=col.edge;g.fill()}});
+    const seg=(a,b,wd,cl)=>{const A=P(a),B=P(b);items.push({z:(A[2]+B[2])/2,f:()=>{g.beginPath();g.moveTo(A[0],A[1]);g.lineTo(B[0],B[1]);g.strokeStyle=cl;g.lineWidth=wd;g.lineCap='round';g.stroke()}})};
+    seg(r.ring[D.ix.C5],r.C6,1.6,col.edge);seg(r.C6,r.O6,1.6,col.edge);
+    if(k<res.length-1){const nx=res[k+1];const thick=o.thick&&k===0;
+      seg(r.ring[D.ix.C1],r.Og,thick?2:2,ink);seg(r.Og,nx.ring[D.ix.C4],thick?6:2,thick?css('--teal'):ink);
+      const og=P(r.Og);items.push({z:og[2]+.5,f:()=>{g.beginPath();g.arc(og[0],og[1],Math.max(2.5,s*.36),0,7);g.fillStyle=o.joint?o.joint(k):ink;g.fill()}})}
+  });
+  items.sort((a,b)=>a.z-b.z).forEach(i=>i.f());
+  if(o.labels){g.font='500 13px '+css('--mono');g.fillStyle=ink;g.textAlign='center';
+    o.labels.forEach(L=>{const p=P(L.p);g.fillStyle=css('--panel');g.globalAlpha=.8;const tw=g.measureText(L.t).width;g.fillRect(p[0]+L.dx-tw/2-3,p[1]+L.dy-12,tw+6,16);g.globalAlpha=1;g.fillStyle=L.c||ink;g.fillText(L.t,p[0]+L.dx,p[1]+L.dy)})}
+  if(o.note){g.font='12px '+css('--sans');g.fillStyle=css('--muted');g.textAlign='left';g.fillText(o.note,10,h-10)}
+}
+const blue=()=>({fill:css('--blue-soft'),edge:css('--blue')}), orange=()=>({fill:css('--orange')+'55',edge:css('--orange')});
+
+// ---------- the map: weights, average angle, exact C_inf ----------
+const C=D.cells,NC=C.phi.length,kT=D.kT;
+const psiH=C.psi.map(p=>((p+117.8+180)%360+360)%360-180), syn=psiH.map(x=>Math.abs(x)<=90);
+function weights(k,p){let w=new Array(NC),ss=0,sa=0;for(let c=0;c<NC;c++){w[c]=Math.exp(-(C.E[c]+(syn[c]?k*(psiH[c]+32):0))/kT);if(syn[c])ss+=w[c];else sa+=w[c]}
+  for(let c=0;c<NC;c++)w[c]*=syn[c]?(1-p)/ss:p/sa;return w}
+function meanPsiH(w){let s=0,co=0;for(let c=0;c<NC;c++)if(syn[c]){s+=w[c]*Math.sin(psiH[c]*Math.PI/180);co+=w[c]*Math.cos(psiH[c]*Math.PI/180)}return Math.atan2(s,co)*180/Math.PI}
+function solveK(target){let lo=-0.08,hi=0.10;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(meanPsiH(weights(m,0.05))>target)lo=m;else hi=m}return (lo+hi)/2}
+function inv3(m){const [a,b,c,d,e,f,g,h,i]=m;const A=e*i-f*h,B=-(d*i-f*g),Cc=d*h-e*g,det=a*A+b*B+c*Cc;return [A/det,-(b*i-c*h)/det,(b*f-c*e)/det,B/det,(a*i-c*g)/det,-(a*f-c*d)/det,Cc/det,-(a*h-b*g)/det,(a*e-b*d)/det]}
+function chainStats(w,n){const Rm=new Array(9).fill(0);for(let c=0;c<NC;c++){const R=C.Rbar[c];for(let j=0;j<9;j++)Rm[j]+=w[c]*R[j]}
+  const v=D.v,l2=dot(v,v);const M=mul3(Rm,inv3(I3.map((x,j)=>x-Rm[j])));const Cinf=1+2*dot(v,rot(M,v))/l2;
+  let P=I3.slice(),s=0;for(let k=1;k<n;k++){P=mul3(P,Rm);s+=(n-k)*dot(v,rot(P,v))/l2}
+  return {Cinf,Cn:1+2*s/n,l:Math.sqrt(l2)}}
+const order=[...Array(NC).keys()].sort((a,b)=>(syn[b]-syn[a])||(psiH[a]-psiH[b])||(C.phi[a]-C.phi[b]));
+function rng(seed){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296}}
+const NCH=5,NRES=150,U=[],QCH=[];{const r=rng(20260930);for(let j=0;j<NCH;j++){U.push(Array.from({length:NRES-1},r));
+  const a=norm([r()-.5,r()-.5,r()-.5]),b=[r()-.5,r()-.5,r()-.5];QCH.push(frameFrom(a,b))}}
+
+// ---------- state ----------
+const el=id=>document.getElementById(id);
+const pFromSlider=s=>0.30*Math.pow(s/100,2), sliderFromP=p=>100*Math.sqrt(p/0.30);
+const natural=(()=>{const w=new Array(NC);let s=0,a=0;for(let c=0;c<NC;c++){w[c]=Math.exp(-C.E[c]/kT);s+=w[c];if(!syn[c])a+=w[c]}return a/s})();
+function state(){const psi=+el('psi').value,p=pFromSlider(+el('flip').value);const k=solveK(psi+117.8);const w=weights(k,p);return {psi,p,w,mean:meanPsiH(w)-117.8}}
+const fmt=(x,d=1)=>x.toFixed(d).replace('-','−');
+
+const Q1=(()=>{const ref=buildChain([valleyT(-150)]);const nr=r=>norm(cross(sub(r.ring[2],r.ring[0]),sub(r.ring[4],r.ring[0])));
+  let n0=nr(ref[0]),n1=nr(ref[1]);if(dot(n0,n1)<0)n1=sc(n1,-1);const n=norm(add(n0,n1));const ex=norm(sub(mean3(ref[1].ring),mean3(ref[0].ring)));
+  const ey=norm(cross(n,ex));return frameFrom(ex,add(sc(ey,.82),sc(n,.57)))})();
+function view1(S){const A=valleyT(S.psi),res=buildChain([A]);const r0=res[0];
+  draw3D('c1',res,{Q:Q1,centre:r0.Og,span:13.5,color:k=>blue(),thick:true,
+    labels:[{p:r0.ring[D.ix.C1],t:'C1',dx:-4,dy:-12},{p:r0.Og,t:'O',dx:0,dy:22},{p:res[1].ring[D.ix.C4],t:'C4',dx:6,dy:-12},{p:res[1].ring[D.ix.C5],t:'C5',dx:10,dy:-10},{p:r0.ring[D.ix.O5],t:'O5',dx:-8,dy:-12},
+            {p:sc(add(r0.Og,res[1].ring[D.ix.C4]),.5),t:'ψ turns about this bond',dx:0,dy:46,c:css('--teal')},
+            {p:mean3(r0.ring),t:'ring 1',dx:0,dy:5,c:css('--muted')},{p:mean3(res[1].ring),t:'ring 2',dx:0,dy:5,c:css('--muted')}]});
+  el('r1psi').textContent=fmt(S.psi)+'°'}
+function helixView(id,S,flipAt){const A=valleyT(S.psi),h=helixOf(A);const tr=Array.from({length:19},(_,k)=>k===flipAt?D.flip:A);const res=buildChain(tr);
+  const cen=res.map(r=>mean3(r.ring));const base=flipAt==null?cen:cen.slice(0,flipAt+1);const c0=mean3(base),call=mean3(cen);
+  const off=sub(cen[0],c0);const perp=sub(off,sc(h.u,dot(off,h.u)));const Q=frameFrom(h.u,perp);
+  draw3D(id,res,{Q,centre:call,span:98,color:k=>(flipAt!=null&&k>flipAt)?orange():blue(),joint:k=>k===flipAt?css('--orange'):css('--ink')});
+  return h}
+function view4(S){const c=el('c4'),{g,w,h}=setup(c);const mL=46,mB=34,mT=10,mR=10,cw=(w-mL-mR)/36,ch=(h-mT-mB)/36;
+  const ys=p=>p>100?p-360:p;const X=phi=>mL+(phi+180)/10*cw,Y=psi=>mT+(100-ys(psi))/10*ch;
+  g.fillStyle=css('--void');g.fillRect(mL,mT,36*cw,36*ch);
+  const h0=css('--heat0'),h1=css('--heat1');const hex=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16));const a=hex(h0),b=hex(h1);
+  for(let i=0;i<NC;i++){const t=Math.min(1,C.E[i]/10);g.fillStyle=`rgb(${a.map((x,j)=>Math.round(x+(b[j]-x)*t)).join(',')})`;g.fillRect(X(C.phi[i]),Y(C.psi[i]),cw+.5,ch+.5)}
+  const wm=Math.max(...S.w);g.strokeStyle=css('--dotline');g.lineWidth=1;
+  for(let i=0;i<NC;i++){const r=Math.sqrt(S.w[i]/wm)*Math.min(cw,ch)*.48;if(r<.8)continue;g.beginPath();g.arc(X(C.phi[i])+cw/2,Y(C.psi[i])+ch/2,r,0,7);g.fillStyle=syn[i]?css('--dot'):css('--orange');g.fill();g.stroke()}
+  const box=(p0,p1,s0,s1,col,txt,tx,ty)=>{g.strokeStyle=col;g.lineWidth=2;g.setLineDash([5,3]);g.strokeRect(X(p0),Y(s1),(p1-p0+10)/10*cw,(ys(s1)-ys(s0)+10)/10*ch);g.setLineDash([]);g.fillStyle=col;g.font='600 13px '+css('--sans');g.textAlign='left';g.fillText(txt,tx,ty)};
+  box(70,130,170,-100,css('--blue'),'the valley',X(-170),Y(-140)+4);box(50,110,40,90,css('--orange'),'flipped joint',X(-170),Y(70)+4);
+  g.strokeStyle=css('--muted');g.lineWidth=1;[[X(-170)+62,Y(-140),X(70)-4,Y(-140)],[X(-170)+82,Y(70),X(50)-4,Y(70)]].forEach(L=>{g.beginPath();g.moveTo(L[0],L[1]);g.lineTo(L[2],L[3]);g.stroke()});
+  const ym=mT+(100-S.mean)/10*ch+ch/2;g.strokeStyle=css('--teal');g.lineWidth=2.5;g.beginPath();g.moveTo(X(60),ym);g.lineTo(X(140)+cw,ym);g.stroke();
+  g.fillStyle=css('--teal');g.font='600 12px '+css('--sans');g.textAlign='left';g.fillText('average ψ',X(140)+cw+4,ym+4);
+  g.fillStyle=css('--muted');g.font='12px '+css('--mono');g.textAlign='center';
+  for(let p=-180;p<=180;p+=60)g.fillText(String(p).replace('-','−'),X(p),h-mB+16);
+  g.textAlign='right';[[-240,'120'],[-180,'±180'],[-120,'−120'],[-60,'−60'],[0,'0'],[60,'60']].forEach(([v,t])=>g.fillText(t,mL-6,mT+(100-v)/10*ch+4));
+  g.fillStyle=css('--ink');g.font='13px '+css('--sans');g.textAlign='center';g.fillText('φ (degrees)',mL+18*cw,h-4);
+  g.save();g.translate(13,mT+18*ch);g.rotate(-Math.PI/2);g.fillText('ψ (degrees)',0,0);g.restore();
+  el('r4psi').textContent=fmt(S.mean,0)+'°';el('r4p').textContent=fmt(100*S.p)+' %'}
+function view5(S){const st=chainStats(S.w,NRES-1);const c=el('c5'),{g,w,h}=setup(c);
+  const cum=new Array(NC);let s=0;order.forEach((ci,i)=>{s+=S.w[ci];cum[i]=s});
+  const pick=u=>{let lo=0,hi=NC-1;u*=s;while(lo<hi){const m=(lo+hi)>>1;if(cum[m]<u)lo=m+1;else hi=m}return order[lo]};
+  const half=21,scale=Math.min(w,h)/2/half;const Qv=userRot('c5');const cx=w/2,cy=h/2;
+  const R=Math.sqrt(st.Cn*(NRES-1))*st.l*Math.sqrt(2/3);
+  g.setLineDash([6,4]);g.strokeStyle=css('--muted');g.lineWidth=1.2;g.beginPath();g.arc(cx,cy,R*scale,0,7);g.stroke();g.setLineDash([]);
+  const cols=[css('--blue'),css('--teal'),css('--ink'),css('--blue'),css('--teal')];
+  for(let j=0;j<NCH;j++){let G={R:QCH[j],t:[0,0,0]};const pts=[],fl=[];const node=G=>{const p=rot(Qv,add(rot(G.R,D.O4),G.t));return [cx+p[0]/10*scale,cy-p[1]/10*scale]};
+    pts.push(node(G));for(let k=0;k<NRES-1;k++){const ci=pick(U[j][k]);G=compose(G,C.T0[ci]);pts.push(node(G));if(!syn[ci])fl.push(pts.length-1)}
+    g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.strokeStyle=cols[j];g.globalAlpha=j===0?1:.5;g.lineWidth=j===0?2:1.3;g.lineJoin='round';g.stroke();g.globalAlpha=1;
+    g.fillStyle=css('--orange');fl.forEach(i=>{g.beginPath();g.arc(pts[i][0],pts[i][1],2.6,0,7);g.fill()})}
+  g.fillStyle=css('--ink');g.beginPath();g.arc(cx,cy,3.5,0,7);g.fill();
+  g.strokeStyle=css('--ink');g.lineWidth=2;g.beginPath();g.moveTo(14,h-14);g.lineTo(14+10*scale,h-14);g.stroke();g.font='12px '+css('--mono');g.textAlign='left';g.fillText('10 nm',14,h-20);
+  el('r5c').textContent=fmt(st.Cinf);el('r5cf').textContent=fmt(st.Cinf*.73);
+  const pos=x=>100*Math.log(x/0.5)/Math.log(80);el('gVal').style.left=Math.max(0,Math.min(100,pos(st.Cinf*.73)))+'%';
+  el('gExp').style.left=pos(3.9)+'%';el('gExp').style.width=(pos(5.8)-pos(3.9))+'%';[1,2,5,10,20].forEach(v=>el('gt'+v).style.left=pos(v)+'%')}
+function update(){const S=state();el('psiOut').textContent='ψ = '+fmt(S.psi)+'°';el('flipOut').textContent=fmt(100*S.p)+' %';
+  view1(S);const h=helixView('c2',S,null);el('r2n').textContent=fmt(h.n);el('r2rise').textContent=fmt(h.rise,2)+' nm';el('r2len').textContent=fmt(19*h.rise)+' nm';
+  helixView('c3',S,9);view4(S);view5(S)}
+
+// ---------- controls ----------
+const chips=(id,items,apply)=>items.forEach(([t,v])=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',()=>{apply(v);update()});el(id).appendChild(b)});
+chips('psiChips',[['stretched −170°',-170],['energy map as computed −150°',-150],['simulations in water, crystal −145°',-145],['hydroxyls rearranged −117.5°',-117.5]],v=>el('psi').value=v);
+chips('flipChips',[['none',0],['GLYCAM06 simulation 0.7 %',.007],['CHARMM36 simulation 6.3 %',.063],['energy map 7.4 %',natural],['one in four',.25]],v=>el('flip').value=sliderFromP(v));
+el('flip').value=sliderFromP(natural);
+['psi','flip'].forEach(id=>el(id).addEventListener('input',update));
+document.querySelectorAll('canvas').forEach(c=>{if(c.id==='c4')return;let d=null;c.style.cursor='grab';
+  c.addEventListener('pointerdown',e=>{d={x:e.clientX,y:e.clientY,v:{...(views[c.id]||{yaw:0,pitch:0})}};c.setPointerCapture(e.pointerId)});
+  c.addEventListener('pointermove',e=>{if(!d)return;views[c.id]={yaw:d.v.yaw+(e.clientX-d.x)*.01,pitch:d.v.pitch+(e.pointerType==='touch'?0:(e.clientY-d.y)*.01)};update()});
+  ['pointerup','pointercancel'].forEach(t=>c.addEventListener(t,()=>d=null))});
+new ResizeObserver(update).observe(document.querySelector('.wrap'));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',update);
+new MutationObserver(update).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(update);
+update();
+</script>

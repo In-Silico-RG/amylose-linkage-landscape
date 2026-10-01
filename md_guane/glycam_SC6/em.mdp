@@ -1,0 +1,14 @@
+integrator = steep
+nsteps = 5000
+emtol = 500
+cutoff-scheme = Verlet
+nstlist = 20
+coulombtype = PME
+rcoulomb = 1.0
+vdwtype = Cut-off
+vdw-modifier = Potential-shift
+rvdw = 1.0
+DispCorr = EnerPres
+fourierspacing = 0.12
+pme-order = 4
+comm-mode = linear

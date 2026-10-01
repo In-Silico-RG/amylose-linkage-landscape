@@ -1,0 +1,10 @@
+c_100_-130/s_196.xyz no result
+c_100_-130/s_243.xyz no result
+c_100_-140/s_109.xyz no result
+c_100_-140/s_198.xyz no result
+c_100_-150/s_056.xyz no result
+c_100_-150/s_124.xyz no result
+c_100_-160/s_102.xyz no result
+c_100_-170/s_202.xyz no result
+c_100_-170/s_217.xyz no result
+c_100_-170/s_286.xyz no result
