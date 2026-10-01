@@ -24,6 +24,7 @@ h1{font-size:1.7rem;font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
 .controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:10px;
   padding:12px 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px 24px}
 .ctl{display:flex;flex-direction:column;gap:4px;min-width:0}
+.barread{grid-column:1/-1;font-size:.9rem;border-top:1px solid var(--line);padding-top:8px} .barread b{font-family:var(--mono);font-size:1.05rem} .barread b.t{color:var(--teal)} .barread b.o{color:var(--orange)} .barread span{color:var(--muted)}
 .ctl label{font-weight:600;font-size:.92rem;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
 .ctl output{font-family:var(--mono);font-weight:500;color:var(--blue);white-space:nowrap}
 .ctl.flip output{color:var(--plane2)} .ctl:not(.phi):not(.flip) output{color:var(--orange)}
@@ -91,6 +92,7 @@ dfn{font-style:normal;font-weight:600}
       <input id="flip" type="range" min="0" max="100" step="1" value="50">
       <div class="chips" id="flipChips"></div>
     </div>
+    <div class="barread">Chain size from these three settings: C<sub>∞</sub> = <b id="barC"></b> <span>(measured: 3.9 to 5.8; includes the factor 0.73 of view 8). φ and ψ act on every view; the flipped joints act on views 3 to 6.</span></div>
   </div>
 
   <section class="step">
@@ -721,8 +723,8 @@ L 252.3 283.4
       </div>
       <div class="sub">ψ seen down the bond O4 → C4, as in view 1. C1′ is in front; C5, C3 and H4 belong to ring 2 behind.</div>
       <canvas id="c3" height="300" aria-label="A chain of twenty rings with one flipped joint"></canvas>
-      <div class="read"><span>normal joint: φ = <b id="r3phi"></b>, ψ = <b class="o" id="r3psi"></b></span><span>flipped joint: φ = <b>90°</b>, ψ = <b class="o">+70°</b></span></div>
-      <div class="cap">Bottom: twenty glucose units with the tenth joint alone flipped. Units after the flip are drawn in orange.</div>
+      <div class="read"><span>normal joint: φ = <b id="r3phi"></b>, ψ = <b class="o" id="r3psi"></b></span><span>flipped joint: φ = <b>90°</b>, ψ = <b class="o">+70°</b></span><span>flipped joints in this chain: <b class="o" id="r3n"></b></span></div>
+      <div class="cap">Bottom: twenty glucose units. The "Flipped joints" slider decides how many of the nineteen joints are flipped (orange dots). Units that have been turned over an odd number of times are drawn in orange. With the slider at "none" this is the regular helix of view 2.</div>
     </div>
     <div>
       <div class="num">3 · THE FLIP</div>
@@ -730,7 +732,7 @@ L 252.3 283.4
       <p>The joint has a second position it can settle in. φ stays about where it was, but ψ sits near +70° instead of −150°: a jump of about 140° about the O4–C4 bond, close to half a turn.</p>
       <p>The two round drawings show it. At the normal joint C5 lies on one side of C1′. At the flipped joint C5, C3 and H4 have all swung round to the opposite side.</p>
       <p>The two drawings above them show what that does to the ring. Ring 2 has turned over: it now shows you its opposite face. Crystallographers who first saw this in ring-shaped amyloses called it a <dfn>band flip</dfn>.</p>
-      <p>In a chain (bottom drawing) one flipped joint breaks the helix and sends the rest of the chain off in another direction. The more joints are flipped, the more often the chain changes direction and the smaller the space it spans. The third slider at the top sets what share of the joints is flipped in views 4 to 6.</p>
+      <p>In a chain (bottom drawing) each flipped joint breaks the helix and sends the rest of the chain off in another direction. Move the "Flipped joints" slider: at "none" the chain is a straight helix, at 7 % one joint in the twenty units is flipped, at "one in four" there are five and the chain is crumpled. The more joints are flipped, the smaller the space the chain spans.</p>
     </div>
   </section>
 
@@ -757,7 +759,7 @@ L 252.3 283.4
   <section class="step">
     <div class="fig">
       <canvas id="c5" height="380" aria-label="Random chains of 150 rings at 303 K"></canvas>
-      <div class="read"><span>C<sub>∞</sub> rigid rings <b id="r5c"></b></span><span>× 0.73 for flexible rings <b class="t" id="r5cf"></b></span><span>measured <b class="t">3.9 – 5.8</b></span></div>
+      <div class="read"><span>C<sub>∞</sub> with frozen rings <b id="r5c"></b></span><span>× 0.73 for real rings (view 8) <b class="t" id="r5cf"></b></span><span>measured <b class="t">3.9 – 5.8</b></span></div>
       <div class="gauge" aria-hidden="true"><div class="axis"></div><div class="exp" id="gExp"></div><div class="val" id="gVal"></div><span class="tick" style="left:0%">0.5</span><span class="tick" id="gt1">1</span><span class="tick" id="gt2">2</span><span class="tick" id="gt5">5</span><span class="tick" id="gt10">10</span><span class="tick" id="gt20">20</span><span class="tick" style="left:100%">40</span></div>
       <div class="cap">Five chains of 150 rings, each joint drawn at random from the squares of view 4 with their shares. Dashed circle: typical end-to-end distance. Orange dots: flipped joints. Same scale at every setting; the bar is 10 nm.</div>
     </div>
@@ -809,17 +811,18 @@ L 252.3 283.4
 
   <section class="step">
     <div class="fig">
-      <canvas id="c8" height="330" aria-label="A simulated chain of twelve rings and the same chain rebuilt with rigid rings"></canvas>
+      <canvas id="c8" height="330" aria-label="A simulated chain of twelve rings and the same chain rebuilt from identical frozen rings"></canvas>
       <div class="local"><label for="frame">snapshot</label><input id="frame" type="range" min="0" max="29" step="1" value="12"><output id="frameOut" for="frame"></output></div>
-      <div class="read"><span>end to end, simulation <b id="r8a"></b></span><span>rigid rings, same φ and ψ <b class="o" id="r8b"></b></span><span>C1–O–C4 angle <b id="r8ang"></b> (rigid model: 115°)</span></div>
-      <div class="cap">Grey and red: twelve rings from one snapshot of a simulation in water (CHARMM36, 100 ns run); ring atoms, the bridging oxygens and the CH₂OH groups. Orange: the same chain rebuilt from that snapshot's own φ and ψ at every joint, but with identical rigid rings. Both start on the same first ring.</div>
+      <div class="read"><span>end to end, simulation <b id="r8a"></b></span><span>frozen rings, same φ and ψ <b class="o" id="r8b"></b></span><span>angle C1′–O4–C4 in this snapshot <b id="r8ang"></b> (frozen ring: 115°)</span></div>
+      <div class="cap">Grey and red: twelve rings from one snapshot of a simulation in water (CHARMM36, 100 ns run); ring atoms, the bridging oxygens and the CH₂OH groups. Orange: twelve identical copies of one frozen ring, joined with that snapshot's own φ and ψ at every joint. Both chains start on the same first ring.</div>
     </div>
     <div>
-      <div class="num">8 · RIGID RINGS VERSUS REAL RINGS</div>
-      <h2>The calculation treats rings as rigid; real rings give a little at every joint</h2>
-      <p>Views 2 to 6 build chains from one rigid copy of the ring, so that φ and ψ are the only freedom. In a simulation the rings pucker slightly and the angle at the shared oxygen opens and closes by a few degrees.</p>
-      <p>Move through the snapshots. The two chains have exactly the same φ and ψ at every joint and start on the same ring, yet they drift apart along the chain. In a single snapshot the rigid chain can come out longer or shorter.</p>
-      <p>On average it comes out longer. Over ten simulations of 100 ns, C<sub>∞</sub> is 9.4 with rigid rings and 6.8 with the real ones, a factor of 0.73. A second force field (GLYCAM06) gives 30 and 21, a factor of 0.71. This is the factor 0.73 that views 5 and 6 apply before comparing with the measured size.</p>
+      <div class="num">8 · FIXED RINGS VERSUS REAL RINGS</div>
+      <h2>The calculation copies one fixed ring; a real ring bends a little</h2>
+      <p>To build the chains of views 2 to 6, the page takes one glucose ring with its bond lengths and bond angles frozen, and copies it again and again. Every copy is exactly the same shape. From one joint to the next only two things change: φ and ψ. The paper computes the chain size with this same simplification.</p>
+      <p>A real ring is not a frozen object. In a simulation each ring bends slightly, and the angle C1′–O4–C4 at the oxygen between two rings opens and closes by a few degrees. The number under the drawing gives that angle in the snapshot shown; in the frozen copy it is always 115°.</p>
+      <p>The drawing puts the two side by side for one snapshot. Grey and red: the twelve rings as they are in the simulation. Orange: twelve copies of the frozen ring, joined with exactly the same φ and ψ at each of the eleven joints, starting from the same first ring. If real rings were frozen, the two chains would lie on top of each other. They do not: a small difference at each joint adds up along the chain. Move the slider to see other snapshots.</p>
+      <p>Averaged over ten simulations of 100 ns, the chain size C<sub>∞</sub> is 9.4 with frozen rings and 6.8 with the real ones: the frozen-ring calculation gives a chain that is too large, and the true value is 0.73 times it. A second force field (GLYCAM06) gives 30 and 21, a factor of 0.71. This is why views 5 and 6 multiply the computed chain size by 0.73 before comparing it with the measured one.</p>
     </div>
   </section>
 </div>
@@ -969,11 +972,16 @@ function pairView(id,phi,psi){const m=chainAtoms([stepT(phi,psi)],true);const at
 function psiDial(id,phi,psi){const m=chainAtoms([stepT(phi,psi)],false);const at=(k,nm)=>m.atoms.find(a=>a.res===k&&a.name===nm).p;
   dial(id,at(0,'O1'),at(1,'C4'),[{p:at(0,'C1'),name:"C1′",ref:true}],[{p:at(1,'C5'),name:'C5',ref:true},{p:at(1,'C3'),name:'C3'},{p:at(1,'H4'),name:'H4'}],'ψ',css('--orange'))}
 function view3(S){pairView('f3a',S.phi,S.psi);pairView('f3b',90,70);psiDial('n3a',S.phi,S.psi);psiDial('n3b',90,70);el('r3phi').textContent=fmt(S.phi,0)+'°';el('r3psi').textContent=fmt(S.psi,0)+'°'}
-function helixView(id,S,flipAt){const A=stepT(+el('phi1').value,S.psi),h=helixOf(A);const tr=Array.from({length:19},(_,k)=>k===flipAt?D.flip:A);const res=buildChain(tr);
-  const cen=res.map(r=>mean3(r.ring));const base=flipAt==null?cen:cen.slice(0,flipAt+1);const c0=mean3(base),call=mean3(cen);
+// fixed random numbers, one per joint of the 20-unit chain: joint j is flipped when UF[j] < share of flipped joints
+const UF=[.55,.31,.83,.12,.67,.92,.44,.21,.74,.02,.60,.35,.88,.16,.50,.27,.95,.09,.70];
+function helixView(id,S,withFlips){const A=stepT(S.phi,S.psi),h=helixOf(A);const fl=UF.map(u=>withFlips&&u<S.p);const tr=fl.map(f=>f?D.flip:A);const res=buildChain(tr);
+  const cen=res.map(r=>mean3(r.ring));const first=fl.indexOf(true);const base=first<0?cen:cen.slice(0,first+1);const c0=mean3(base),call=mean3(cen);
   const off=sub(cen[0],c0);const perp=sub(off,sc(h.u,dot(off,h.u)));const Q=frameFrom(h.u,perp);
-  drawMol(id,chainAtoms(tr,true),{Q,centre:call,span:92,style:'stick',width:2.6,tint:k=>(flipAt!=null&&k>flipAt)?css('--orange'):null});
-  return h}
+  const turned=[false];fl.forEach((f,k)=>turned.push(f?!turned[k]:turned[k]));               // a unit is drawn orange when an odd number of flips precedes it
+  const mol=chainAtoms(tr,true);const ext=Math.max(...['0','1','2'].map(a=>Math.max(...cen.map(c=>Math.abs(c[a]-call[a])))));
+  drawMol(id,mol,{Q,centre:call,span:withFlips?Math.max(92,ext*2.6):92,style:'stick',width:2.6,tint:k=>turned[k]?css('--orange'):null,
+    items:(P,g)=>fl.map((f,k)=>{if(!f)return null;const q=P(res[k].Og);return {z:1e3,f:()=>{g.beginPath();g.arc(q[0],q[1],6,0,7);g.fillStyle=css('--orange');g.fill();g.strokeStyle=css('--ink');g.lineWidth=1.5;g.stroke()}}}).filter(Boolean)});
+  return {n:h.n,rise:h.rise,flips:fl.filter(Boolean).length}}
 function view4(S){const c=el('c4'),{g,w,h}=setup(c);const mL=46,mB=34,mT=10,mR=10,cw=(w-mL-mR)/36,ch=(h-mT-mB)/36;
   const ys=p=>p>100?p-360:p;const X=phi=>mL+(phi+180)/10*cw,Y=psi=>mT+(100-ys(psi))/10*ch;
   g.fillStyle=css('--void');g.fillRect(mL,mT,36*cw,36*ch);
@@ -1064,9 +1072,9 @@ function view8(){const F=D.md.frames[+el('frame').value],n=F.tors.length+1;const
   drawMol('c8',molOf(md),{Q:frameFrom(ex,nrm),centre:mean3(cm.concat(cr)),span:46,style:'stick',width:3,ghost:molOf(rigid)});
   el('frameOut').textContent=fmt(F.t,0)+' ns';el('r8a').textContent=fmt(len(sub(cm[n-1],cm[0]))/10,2)+' nm';el('r8b').textContent=fmt(len(sub(cr[n-1],cr[0]))/10,2)+' nm';
   el('r8ang').textContent=fmt(F.bridge.reduce((a,b)=>a+b,0)/F.bridge.length,0)+'°'}
-function update(){const S=state();el('psiOut').textContent=fmt(S.psi)+'°';el('flipOut').textContent=fmt(100*S.p)+' %';
-  view1(S);const h=helixView('c2',S,null);el('r2n').textContent=fmt(h.n);el('r2rise').textContent=fmt(h.rise,2)+' nm';el('r2len').textContent=fmt(19*h.rise)+' nm';
-  view3(S);helixView('c3',S,9);view4(S);view5(S);view6(S);view7(S);view8()}
+function update(){const S=state();{const st=chainStats(S.w,2);el('barC').textContent=fmt(st.Cinf*.73);el('barC').className=(st.Cinf*.73>=3.9&&st.Cinf*.73<=5.8)?'t':'o'}el('psiOut').textContent=fmt(S.psi)+'°';el('flipOut').textContent=fmt(100*S.p)+' %';
+  view1(S);const h=helixView('c2',S,false);el('r2n').textContent=fmt(h.n);el('r2rise').textContent=fmt(h.rise,2)+' nm';el('r2len').textContent=fmt(19*h.rise)+' nm';
+  view3(S);const f3=helixView('c3',S,true);el('r3n').textContent=f3.flips+' of 19';view4(S);view5(S);view6(S);view7(S);view8()}
 
 // ---------- controls ----------
 let showPP={CHARMM36:false,GLYCAM06:false};
