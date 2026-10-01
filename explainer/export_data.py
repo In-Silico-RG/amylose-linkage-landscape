@@ -33,6 +33,10 @@ O6 = [n.GetIdx() for n in m.GetAtomWithIdx(C6).GetNeighbors() if n.GetSymbol() =
 xyz = lambda i: [round(float(x), 3) for x in T.X[i]]
 out = dict(cells=cells, valley=valley, flip=tr(mc.step_transform(T, np.radians(90.0), np.radians(70.0))),
            ring=[xyz(i) for i in ring], ringO=ring.index(T.O5p), O4=xyz(T.O4p), Og=xyz(T.Og), C6=xyz(C6), O6=xyz(O6),
-           v=[float(x) for x in (T.X[T.Og] - T.X[T.O4p]) / 10.0], kT=0.0019872 * 303.15, Cinf_check=r["Cinf"])
+           v=[float(x) for x in (T.X[T.Og] - T.X[T.O4p]) / 10.0], kT=0.0019872 * 303.15, Cinf_check=r["Cinf"],
+           aBridge=float(T.a_C1OC4),
+           ix=dict(C1=ring.index(T.C1p), C4=ring.index(T.C4p), C5=ring.index(T.C5p), O5=ring.index(T.O5p),
+                   C2=[i for i, a in enumerate(ring) if a in [n.GetIdx() for n in m.GetAtomWithIdx(T.C1p).GetNeighbors()] and a != T.O5p][0],
+                   C3=[i for i, a in enumerate(ring) if a in [n.GetIdx() for n in m.GetAtomWithIdx(T.C4p).GetNeighbors()] and a != T.C5p][0]))
 (HERE / "data.json").write_text(json.dumps(out, separators=(",", ":")))
 print("cells", len(pp), "bytes", (HERE / "data.json").stat().st_size, "ring atoms", [T.sym[i] for i in ring])

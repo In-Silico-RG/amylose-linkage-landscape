@@ -5,17 +5,17 @@
 :root{
   --bg:#f6f8fa; --panel:#ffffff; --ink:#18222d; --muted:#5a6876; --line:#d5dce3;
   --blue:#2a78d6; --blue-soft:#cfe2f8; --orange:#eb6834; --teal:#12996b; --band:#dff3ea;
-  --heat0:#143a66; --heat1:#e9f0f7; --void:#eceff2; --dot:#ffffff; --dotline:#18222d;
+  --heat0:#143a66; --heat1:#e9f0f7; --void:#eceff2; --dot:#ffffff; --dotline:#18222d; --plane2:#b4691f;
   --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#10161c; --panel:#18212a; --ink:#e6edf3; --muted:#9aa8b5; --line:#2c3945;
   --blue:#5aa2f0; --blue-soft:#1f3a57; --orange:#f58a5c; --teal:#3fc79a; --band:#173a2e;
-  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; color-scheme:dark } }
+  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#10161c; --panel:#18212a; --ink:#e6edf3; --muted:#9aa8b5; --line:#2c3945;
   --blue:#5aa2f0; --blue-soft:#1f3a57; --orange:#f58a5c; --teal:#3fc79a; --band:#173a2e;
-  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; color-scheme:dark }
+  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; color-scheme:dark }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;margin:0}
 .wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:28px 60px;display:flex;flex-direction:column;gap:22px}
@@ -41,7 +41,14 @@ canvas{display:block;width:100%;touch-action:pan-y;border-radius:6px}
 .cap{font-size:.8rem;color:var(--muted);padding:0 4px 2px}
 .read{font-family:var(--mono);font-size:.86rem;font-variant-numeric:tabular-nums;display:flex;flex-wrap:wrap;gap:4px 18px;padding:2px 4px}
 .read b{font-weight:500;color:var(--blue)} .read b.o{color:var(--orange)} .read b.t{color:var(--teal)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.seg{display:flex;gap:6px;padding:2px 4px}
+.seg button{font:inherit;font-size:.86rem;font-weight:600;padding:4px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:var(--panel)}
+.seg button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.local{display:flex;align-items:center;gap:10px;padding:2px 4px;font-size:.86rem}
+.local input{flex:1;min-width:0} .local output{font-family:var(--mono);color:var(--blue);min-width:5.5em;text-align:right}
+.sub{font-size:.78rem;color:var(--muted);padding:0 4px;text-align:center}
 .gauge{position:relative;height:50px;margin:6px 14px 8px}
 .gauge .axis{position:absolute;left:0;right:0;top:20px;height:8px;background:var(--void);border-radius:4px}
 .gauge .exp{position:absolute;top:14px;height:20px;background:var(--band);border:1px solid var(--teal);border-radius:4px}
@@ -49,7 +56,7 @@ canvas{display:block;width:100%;touch-action:pan-y;border-radius:6px}
 .gauge .tick{position:absolute;top:32px;font-family:var(--mono);font-size:.7rem;color:var(--muted);transform:translateX(-50%)}
 .key{display:inline-block;width:.8em;height:.8em;border-radius:2px;vertical-align:-.05em;margin-right:.3em}
 dfn{font-style:normal;font-weight:600}
-@media (max-width:760px){ .step{grid-template-columns:1fr} .controls{grid-template-columns:1fr} .two{grid-template-columns:1fr} h1{font-size:1.4rem} }
+@media (max-width:760px){ .step{grid-template-columns:1fr} .controls{grid-template-columns:1fr} h1{font-size:1.4rem} }
 </style>
 
 <div class="wrap">
@@ -73,16 +80,26 @@ dfn{font-style:normal;font-weight:600}
 
   <section class="step">
     <div class="fig">
-      <canvas id="c1" height="340" aria-label="Two glucose rings joined by one oxygen"></canvas>
-      <div class="read"><span>φ = <b>100°</b> (held)</span><span>ψ = <b id="r1psi"></b></span></div>
+      <div class="seg" role="group" aria-label="Which angle to show">
+        <button type="button" id="showPsi" aria-pressed="true">Show ψ</button>
+        <button type="button" id="showPhi" aria-pressed="false">Show φ</button>
+      </div>
+      <div class="two">
+        <div><canvas id="c1" height="290" aria-label="Two glucose rings joined by one oxygen, with the four atoms of the angle marked"></canvas><div class="sub">the two rings; the four atoms A–B–C–D and the two planes</div></div>
+        <div><canvas id="c1n" height="250" aria-label="View straight down the middle bond of the dihedral angle"></canvas><div class="sub" id="c1ncap"></div></div>
+      </div>
+      <div class="local"><label for="phi1">φ (this drawing and views 2–3)</label><input id="phi1" type="range" min="60" max="140" step="2.5" value="100"><output id="phi1Out" for="phi1"></output></div>
+      <div class="read"><span>φ = <b id="r1phi"></b></span><span>ψ = <b id="r1psi"></b></span><span id="r1chk"></span></div>
       <div class="cap">Blue dot: the oxygen inside each ring (O5). Black dot: the oxygen the two rings share. Hydrogens and hydroxyl groups are not drawn. The stub on each ring is its CH₂OH group, so you can tell which face is up.</div>
     </div>
     <div>
       <div class="num">1 · THE JOINT</div>
-      <h2>Two rings, one shared oxygen, two angles</h2>
-      <p>Neighbouring glucose rings in amylose are connected through a single oxygen: C1 of one ring, the oxygen, C4 of the next. Each ring is stiff. The only way the second ring can move relative to the first is by rotation about the two bonds to that oxygen.</p>
-      <p><dfn>φ</dfn> is the rotation about the C1–O bond (dihedral O5–C1–O–C4). <dfn>ψ</dfn> is the rotation about the O–C4 bond (dihedral C1–O–C4–C5), the bond drawn thick. φ hardly varies in amylose, about 100°. ψ is the angle that matters here.</p>
-      <p>Move the ψ slider. The left ring stays put and the right ring swings about the thick bond. That motion is everything the rest of this page is about.</p>
+      <h2>Two rings, one shared oxygen, and two dihedral angles: φ and ψ</h2>
+      <p>Neighbouring glucose rings in amylose are connected through a single oxygen: C1 of ring 1, the oxygen, C4 of ring 2. Each ring is stiff. Ring 2 can move relative to ring 1 only by rotation about the two bonds to that oxygen. Each rotation is measured by a dihedral angle.</p>
+      <p>A <dfn>dihedral angle</dfn> takes four atoms in a row, A–B–C–D. A, B and C lie in one plane; B, C and D lie in another. The two planes share the bond B–C the way the two covers of a book share the spine, and the dihedral angle is how far the book is open. Looking straight down the bond B–C (lower drawing), it is the angle between A in front and D behind. Clockwise from A to D counts as positive.</p>
+      <p><dfn>ψ</dfn>: A–B–C–D = C1–O–C4–C5. The spine is the O–C4 bond. Changing ψ swings ring 2 about that bond.</p>
+      <p><dfn>φ</dfn>: A–B–C–D = O5–C1–O–C4. The spine is the C1–O bond. Changing φ swings the oxygen's other bond, and ring 2 with it, about C1–O.</p>
+      <p>In amylose φ stays close to 100° (try moving it: the rings soon collide). ψ is the one with freedom, and it is the top slider of this page.</p>
     </div>
   </section>
 
@@ -90,7 +107,7 @@ dfn{font-style:normal;font-weight:600}
     <div class="fig">
       <canvas id="c2" height="230" aria-label="Twenty rings with the same angle at every joint: a regular helix"></canvas>
       <div class="read"><span>rings per turn <b id="r2n"></b></span><span>advance per ring <b id="r2rise"></b></span><span>length of 20 rings <b id="r2len"></b></span></div>
-      <div class="cap">Twenty rings, the same φ and ψ at all nineteen joints. Same scale at every setting.</div>
+      <div class="cap">Twenty rings, the same φ and ψ at all nineteen joints (φ from the slider of view 1). Same scale at every setting.</div>
     </div>
     <div>
       <div class="num">2 · REPEAT IT</div>
@@ -169,6 +186,20 @@ function buildChain(transforms){            // transforms: one 12-vector per joi
   for(const A of transforms){G=compose(G,A);res.push(place(G))}
   return res;
 }
+// rigid step for any (phi, psi): the same construction as cheminf/chain_builder.py (NeRF placement of C4 and C5 of the
+// next ring, then the rigid motion that carries the template triad O4-C4-C5 onto them)
+const len=a=>Math.hypot(a[0],a[1],a[2]);
+const TP=(()=>{const O5=D.ring[D.ix.O5],C1=D.ring[D.ix.C1],C4=D.ring[D.ix.C4],C5=D.ring[D.ix.C5];const ang=(a,b,c)=>Math.acos(dot(norm(sub(a,b)),norm(sub(c,b))));
+  return {O5,C1,Og:D.Og,O4:D.O4,C4,C5,bOC4:len(sub(C4,D.O4)),aB:D.aBridge,aOC4C5:ang(D.O4,C4,C5),bC4C5:len(sub(C5,C4))}})();
+function nerf(a,b,c,bond,angle,tors){const bc=norm(sub(c,b)),n=norm(cross(sub(b,a),bc)),m=cross(n,bc);
+  return add(c,add(sc(bc,-bond*Math.cos(angle)),add(sc(m,bond*Math.sin(angle)*Math.cos(tors)),sc(n,bond*Math.sin(angle)*Math.sin(tors)))))}
+function triFrame(a,b,c){const e1=norm(sub(b,a));const u=sub(c,b);const e2=norm(sub(u,sc(e1,dot(u,e1))));return [e1,e2,cross(e1,e2)]}
+function stepT(phi,psi){const r=Math.PI/180;const C4n=nerf(TP.O5,TP.C1,TP.Og,TP.bOC4,TP.aB,phi*r),C5n=nerf(TP.C1,TP.Og,C4n,TP.bC4C5,TP.aOC4C5,psi*r);
+  const Ft=triFrame(TP.Og,C4n,C5n),Fp=triFrame(TP.O4,TP.C4,TP.C5);const R=new Array(9);
+  for(let i=0;i<3;i++)for(let j=0;j<3;j++)R[3*i+j]=Ft[0][i]*Fp[0][j]+Ft[1][i]*Fp[1][j]+Ft[2][i]*Fp[2][j];
+  const t=sub(C4n,rot(R,TP.C4));return R.concat(t)}
+function dihed(p0,p1,p2,p3){const b0=sub(p0,p1),b1=norm(sub(p2,p1)),b2=sub(p3,p2);const v=sub(b0,sc(b1,dot(b0,b1))),w=sub(b2,sc(b1,dot(b2,b1)));
+  return Math.atan2(dot(cross(b1,v),w),dot(v,w))*180/Math.PI}
 function valleyT(psi){const g=D.valley.psi;let i=Math.round((psi-g[0])/(g[1]-g[0]));i=Math.max(0,Math.min(g.length-1,i));return D.valley.T[i]}
 function helixOf(A){const R=T_R(A),t=T_t(A);const th=Math.acos(Math.max(-1,Math.min(1,(R[0]+R[4]+R[8]-1)/2)));
   let u=norm([R[7]-R[5],R[2]-R[6],R[3]-R[1]]);let rise=dot(t,u);if(rise<0){u=sc(u,-1);rise=-rise}
@@ -176,7 +207,8 @@ function helixOf(A){const R=T_R(A),t=T_t(A);const th=Math.acos(Math.max(-1,Math.
 
 // ---------- 3D drawing ----------
 const views={};                                // per canvas: yaw, pitch from dragging
-function setup(c){const dpr=window.devicePixelRatio||1,w=c.clientWidth,h=+c.getAttribute('height');c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);c.style.height=h+'px';
+function setup(c){if(!c.dataset.h)c.dataset.h=c.getAttribute('height');   // the height attribute is overwritten below; keep the design height
+  const dpr=window.devicePixelRatio||1,w=c.clientWidth,h=+c.dataset.h;c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);c.style.height=h+'px';
   const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,w,h);return {g,w,h}}
 function userRot(id){const v=views[id]||{yaw:0,pitch:0};const cy=Math.cos(v.yaw),sy=Math.sin(v.yaw),cp=Math.cos(v.pitch),sp=Math.sin(v.pitch);
   return mul3([1,0,0,0,cp,-sp,0,sp,cp],[cy,0,sy,0,1,0,-sy,0,cy])}
@@ -185,13 +217,13 @@ function draw3D(id,res,o){                     // o: {Q base view, centre, span 
   const c=document.getElementById(id),{g,w,h}=setup(c);const Q=mul3(userRot(id),o.Q);const s=w/o.span;
   const P=p=>{const q=rot(Q,sub(p,o.centre));return [w/2+(o.dx||0)+q[0]*s,h/2-q[1]*s,q[2]]};
   const items=[];const ink=css('--ink'),line=css('--line');
+  if(o.items)o.items(P,g,s).forEach(i=>items.push(i));
   res.forEach((r,k)=>{const col=o.color(k);const ring=r.ring.map(P);
     items.push({z:ring.reduce((a,p)=>a+p[2],0)/6,f:()=>{g.beginPath();ring.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fillStyle=col.fill;g.globalAlpha=.88;g.fill();g.globalAlpha=1;g.strokeStyle=col.edge;g.lineWidth=1.4;g.stroke();
       const o5=ring[D.ix.O5];g.beginPath();g.arc(o5[0],o5[1],Math.max(2,s*.28),0,7);g.fillStyle=col.edge;g.fill()}});
     const seg=(a,b,wd,cl)=>{const A=P(a),B=P(b);items.push({z:(A[2]+B[2])/2,f:()=>{g.beginPath();g.moveTo(A[0],A[1]);g.lineTo(B[0],B[1]);g.strokeStyle=cl;g.lineWidth=wd;g.lineCap='round';g.stroke()}})};
     seg(r.ring[D.ix.C5],r.C6,1.6,col.edge);seg(r.C6,r.O6,1.6,col.edge);
-    if(k<res.length-1){const nx=res[k+1];const thick=o.thick&&k===0;
-      seg(r.ring[D.ix.C1],r.Og,thick?2:2,ink);seg(r.Og,nx.ring[D.ix.C4],thick?6:2,thick?css('--teal'):ink);
+    if(k<res.length-1){const nx=res[k+1];seg(r.ring[D.ix.C1],r.Og,2,ink);seg(r.Og,nx.ring[D.ix.C4],2,ink);
       const og=P(r.Og);items.push({z:og[2]+.5,f:()=>{g.beginPath();g.arc(og[0],og[1],Math.max(2.5,s*.36),0,7);g.fillStyle=o.joint?o.joint(k):ink;g.fill()}})}
   });
   items.sort((a,b)=>a.z-b.z).forEach(i=>i.f());
@@ -228,13 +260,38 @@ const fmt=(x,d=1)=>x.toFixed(d).replace('-','−');
 const Q1=(()=>{const ref=buildChain([valleyT(-150)]);const nr=r=>norm(cross(sub(r.ring[2],r.ring[0]),sub(r.ring[4],r.ring[0])));
   let n0=nr(ref[0]),n1=nr(ref[1]);if(dot(n0,n1)<0)n1=sc(n1,-1);const n=norm(add(n0,n1));const ex=norm(sub(mean3(ref[1].ring),mean3(ref[0].ring)));
   const ey=norm(cross(n,ex));return frameFrom(ex,add(sc(ey,.82),sc(n,.57)))})();
-function view1(S){const A=valleyT(S.psi),res=buildChain([A]);const r0=res[0];
-  draw3D('c1',res,{Q:Q1,centre:r0.Og,span:13.5,color:k=>blue(),thick:true,
-    labels:[{p:r0.ring[D.ix.C1],t:'C1',dx:-4,dy:-12},{p:r0.Og,t:'O',dx:0,dy:22},{p:res[1].ring[D.ix.C4],t:'C4',dx:6,dy:-12},{p:res[1].ring[D.ix.C5],t:'C5',dx:10,dy:-10},{p:r0.ring[D.ix.O5],t:'O5',dx:-8,dy:-12},
-            {p:sc(add(r0.Og,res[1].ring[D.ix.C4]),.5),t:'ψ turns about this bond',dx:0,dy:46,c:css('--teal')},
-            {p:mean3(r0.ring),t:'ring 1',dx:0,dy:5,c:css('--muted')},{p:mean3(res[1].ring),t:'ring 2',dx:0,dy:5,c:css('--muted')}]});
-  el('r1psi').textContent=fmt(S.psi)+'°'}
-function helixView(id,S,flipAt){const A=valleyT(S.psi),h=helixOf(A);const tr=Array.from({length:19},(_,k)=>k===flipAt?D.flip:A);const res=buildChain(tr);
+let showAngle='psi';
+function view1(S){const phi=+el('phi1').value;const res=buildChain([stepT(phi,S.psi)]);const r0=res[0],r1=res[1];
+  const quad=showAngle==='psi'?[[r0.ring[D.ix.C1],'C1'],[r0.Og,'O'],[r1.ring[D.ix.C4],'C4'],[r1.ring[D.ix.C5],'C5']]
+                              :[[r0.ring[D.ix.O5],'O5'],[r0.ring[D.ix.C1],'C1'],[r0.Og,'O'],[r1.ring[D.ix.C4],'C4']];
+  const [A,B,Cc,Dd]=quad.map(q=>q[0]);const teal=css('--teal'),p2=css('--plane2');
+  draw3D('c1',res,{Q:Q1,centre:r0.Og,span:12.5,color:k=>blue(),
+    items:(P,g)=>{const a=P(A),b=P(B),c=P(Cc),d=P(Dd);const tri=(x,y,z,col)=>({z:(x[2]+y[2]+z[2])/3-.2,f:()=>{g.beginPath();g.moveTo(x[0],x[1]);g.lineTo(y[0],y[1]);g.lineTo(z[0],z[1]);g.closePath();g.fillStyle=col;g.globalAlpha=.3;g.fill();g.globalAlpha=1}});
+      const ln=(x,y,col,wd)=>({z:Math.max(x[2],y[2])+2,f:()=>{g.beginPath();g.moveTo(x[0],x[1]);g.lineTo(y[0],y[1]);g.strokeStyle=col;g.lineWidth=wd;g.lineCap='round';g.stroke()}});
+      return [tri(a,b,c,teal),tri(b,c,d,p2),ln(a,b,teal,4),ln(c,d,p2,4),ln(b,c,css('--ink'),7)]},
+    labels:quad.map((q,i)=>({p:q[0],t:'ABCD'[i]+' = '+q[1],dx:showAngle==='psi'?[-26,0,16,30][i]:[-26,-6,0,24][i],dy:showAngle==='psi'?[-14,28,28,-14][i]:[-14,-16,28,-14][i],c:[teal,css('--ink'),css('--ink'),p2][i]}))
+      .concat([{p:mean3(r0.ring),t:'ring 1',dx:-30,dy:40,c:css('--muted')},{p:mean3(r1.ring),t:'ring 2',dx:34,dy:40,c:css('--muted')}])});
+  // view straight down the bond B -> C: A in front (drawn upward), D behind; clockwise from A to D is positive
+  const c=el('c1n'),{g,w,h}=setup(c);const ax=norm(sub(Cc,B));const perp=v=>sub(v,sc(ax,dot(v,ax)));
+  const up=norm(perp(sub(A,B))),right=cross(up,sc(ax,-1));const dv=norm(perp(sub(Dd,Cc)));const ang=Math.atan2(dot(dv,right),dot(dv,up));
+  const cx=w/2,cy=h/2+4,R=Math.min(w,h)*.2,L=Math.min(w,h)*.4;const ink=css('--ink');
+  const others=showAngle==='psi'?[[sub(r1.ring[D.ix.C3],Cc),'C3']]:[];
+  g.lineCap='round';
+  others.forEach(([v,t])=>{const u=norm(perp(v));const a2=Math.atan2(dot(u,right),dot(u,up));g.strokeStyle=css('--line');g.lineWidth=3;g.beginPath();g.moveTo(cx+R*Math.sin(a2),cy-R*Math.cos(a2));g.lineTo(cx+L*.85*Math.sin(a2),cy-L*.85*Math.cos(a2));g.stroke();
+    g.fillStyle=css('--muted');g.font='12px '+css('--mono');g.textAlign='center';g.fillText(t,cx+(L*.85+12)*Math.sin(a2),cy-(L*.85+12)*Math.cos(a2)+4)});
+  g.strokeStyle=p2;g.lineWidth=5;g.beginPath();g.moveTo(cx+R*Math.sin(ang),cy-R*Math.cos(ang));g.lineTo(cx+L*Math.sin(ang),cy-L*Math.cos(ang));g.stroke();
+  g.beginPath();g.arc(cx,cy,R,0,7);g.fillStyle=css('--panel');g.fill();g.strokeStyle=ink;g.lineWidth=2;g.stroke();
+  g.strokeStyle=teal;g.lineWidth=5;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx,cy-L);g.stroke();
+  g.beginPath();g.arc(cx,cy,4,0,7);g.fillStyle=ink;g.fill();
+  g.strokeStyle=ink;g.lineWidth=1.6;g.setLineDash([4,3]);g.beginPath();g.arc(cx,cy,L*.62,-Math.PI/2,-Math.PI/2+ang,ang<0);g.stroke();g.setLineDash([]);
+  g.font='600 13px '+css('--mono');g.textAlign='center';g.fillStyle=teal;g.fillText('A = '+quad[0][1],cx,cy-L-8);
+  g.fillStyle=p2;g.fillText('D = '+quad[3][1],cx+(L+20)*Math.sin(ang),cy-(L+20)*Math.cos(ang)+5);
+  const mid=ang/2;g.fillStyle=ink;g.font='600 15px '+css('--mono');g.fillText((showAngle==='psi'?'ψ':'φ')+' = '+fmt(ang*180/Math.PI,0)+'°',cx+L*.86*Math.sin(mid),cy-L*.86*Math.cos(mid)+5);
+  g.font='12px '+css('--sans');g.fillStyle=css('--muted');g.textAlign='left';g.fillText('front atom: '+quad[1][1],8,16);g.fillText('behind it (circle): '+quad[2][1],8,32);
+  el('c1ncap').textContent='looking straight down the bond '+quad[1][1]+' → '+quad[2][1];
+  el('phi1Out').textContent='φ = '+fmt(phi)+'°';el('r1phi').textContent=fmt(dihed(r0.ring[D.ix.O5],r0.ring[D.ix.C1],r0.Og,r1.ring[D.ix.C4]))+'°';
+  el('r1psi').textContent=fmt(dihed(r0.ring[D.ix.C1],r0.Og,r1.ring[D.ix.C4],r1.ring[D.ix.C5]))+'°'}
+function helixView(id,S,flipAt){const A=stepT(+el('phi1').value,S.psi),h=helixOf(A);const tr=Array.from({length:19},(_,k)=>k===flipAt?D.flip:A);const res=buildChain(tr);
   const cen=res.map(r=>mean3(r.ring));const base=flipAt==null?cen:cen.slice(0,flipAt+1);const c0=mean3(base),call=mean3(cen);
   const off=sub(cen[0],c0);const perp=sub(off,sc(h.u,dot(off,h.u)));const Q=frameFrom(h.u,perp);
   draw3D(id,res,{Q,centre:call,span:98,color:k=>(flipAt!=null&&k>flipAt)?orange():blue(),joint:k=>k===flipAt?css('--orange'):css('--ink')});
@@ -282,8 +339,10 @@ const chips=(id,items,apply)=>items.forEach(([t,v])=>{const b=document.createEle
 chips('psiChips',[['stretched −170°',-170],['energy map as computed −150°',-150],['simulations in water, crystal −145°',-145],['hydroxyls rearranged −117.5°',-117.5]],v=>el('psi').value=v);
 chips('flipChips',[['none',0],['GLYCAM06 simulation 0.7 %',.007],['CHARMM36 simulation 6.3 %',.063],['energy map 7.4 %',natural],['one in four',.25]],v=>el('flip').value=sliderFromP(v));
 el('flip').value=sliderFromP(natural);
-['psi','flip'].forEach(id=>el(id).addEventListener('input',update));
-document.querySelectorAll('canvas').forEach(c=>{if(c.id==='c4')return;let d=null;c.style.cursor='grab';
+['psi','flip','phi1'].forEach(id=>el(id).addEventListener('input',update));
+[['showPsi','psi'],['showPhi','phi']].forEach(([id,a])=>el(id).addEventListener('click',()=>{showAngle=a;el('showPsi').setAttribute('aria-pressed',a==='psi');el('showPhi').setAttribute('aria-pressed',a==='phi');update()}));
+{const a=stepT(100,-150),b=valleyT(-150);console.log('builder check, max difference from the exported transform:',Math.max(...a.map((x,i)=>Math.abs(x-b[i]))).toExponential(2))}
+document.querySelectorAll('canvas').forEach(c=>{if(c.id==='c4'||c.id==='c1n')return;let d=null;c.style.cursor='grab';
   c.addEventListener('pointerdown',e=>{d={x:e.clientX,y:e.clientY,v:{...(views[c.id]||{yaw:0,pitch:0})}};c.setPointerCapture(e.pointerId)});
   c.addEventListener('pointermove',e=>{if(!d)return;views[c.id]={yaw:d.v.yaw+(e.clientX-d.x)*.01,pitch:d.v.pitch+(e.pointerType==='touch'?0:(e.clientY-d.y)*.01)};update()});
   ['pointerup','pointercancel'].forEach(t=>c.addEventListener(t,()=>d=null))});
