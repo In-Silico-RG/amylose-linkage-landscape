@@ -1,0 +1,16 @@
+; single-point energies of stored conformations of the isolated chain (no water), split by pair of residues
+integrator      = md
+nsteps          = 0
+cutoff-scheme   = Verlet
+pbc             = xyz
+coulombtype     = Cut-off
+rcoulomb        = 5.0
+vdwtype         = Cut-off
+vdw-modifier    = None
+rvdw            = 5.0
+DispCorr        = no
+nstcalcenergy   = 1
+nstenergy       = 1
+energygrps      = r1 r2 r3 r4 r5 r6
+constraints     = none
+continuation    = yes
