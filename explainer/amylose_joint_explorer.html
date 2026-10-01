@@ -48,6 +48,9 @@ canvas{display:block;width:100%;touch-action:pan-y;border-radius:6px}
 .ttl{font-weight:600;font-size:.92rem;padding:2px 6px;color:var(--blue)} .ttl.o{color:var(--orange)}
 details{padding:2px 4px} summary{cursor:pointer;font-size:.9rem;font-weight:600;color:var(--blue);padding:4px 0}
 .note{font-size:.84rem;color:var(--muted)}
+ol.steps{margin:0 0 10px;padding-left:1.3em;max-width:60ch} ol.steps li{margin-bottom:5px}
+table.mini{border-collapse:collapse;font-size:.9rem;margin:0 0 12px;font-variant-numeric:tabular-nums} table.mini th,table.mini td{padding:4px 12px 4px 0;text-align:right;border-bottom:1px solid var(--line)}
+table.mini th:first-child,table.mini td:first-child{text-align:left} table.mini th{font-weight:600;color:var(--muted);font-size:.82rem}
 .seg{display:flex;gap:6px;padding:2px 4px}
 .seg button{font:inherit;font-size:.86rem;font-weight:600;padding:4px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:var(--panel)}
@@ -822,7 +825,18 @@ L 252.3 283.4
       <p>To build the chains of views 2 to 6, the page takes one glucose ring with its bond lengths and bond angles frozen, and copies it again and again. Every copy is exactly the same shape. From one joint to the next only two things change: φ and ψ. The paper computes the chain size with this same simplification.</p>
       <p>A real ring is not a frozen object. In a simulation each ring bends slightly, and the angle C1′–O4–C4 at the oxygen between two rings opens and closes by a few degrees. The number under the drawing gives that angle in the snapshot shown; in the frozen copy it is always 115°.</p>
       <p>The drawing puts the two side by side for one snapshot. Grey and red: the twelve rings as they are in the simulation. Orange: twelve copies of the frozen ring, joined with exactly the same φ and ψ at each of the eleven joints, starting from the same first ring. If real rings were frozen, the two chains would lie on top of each other. They do not: a small difference at each joint adds up along the chain. Move the slider to see other snapshots.</p>
-      <p>Averaged over ten simulations of 100 ns, the chain size C<sub>∞</sub> is 9.4 with frozen rings and 6.8 with the real ones: the frozen-ring calculation gives a chain that is too large, and the true value is 0.73 times it. A second force field (GLYCAM06) gives 30 and 21, a factor of 0.71. This is why views 5 and 6 multiply the computed chain size by 0.73 before comparing it with the measured one.</p>
+      <p><b>Where the factor 0.73 comes from.</b> A <dfn>simulation</dfn> here is a computer model of one amylose chain surrounded by water molecules, in which every atom moves and the rings are free to bend. A <dfn>force field</dfn> is the set of formulas the simulation uses for the forces between atoms; CHARMM36 and GLYCAM06 are two such sets, made by different groups.</p>
+      <ol class="steps">
+        <li>Run the simulation.</li>
+        <li>From the chain as it moves in the simulation, bending rings and all, compute the chain-size number C<sub>∞</sub> of view 5. With CHARMM36 this gives <b>6.8</b>.</li>
+        <li>Now keep from that same simulation only the angles φ and ψ of every joint at every instant, and discard everything else. Put those angles on a chain of identical frozen rings and compute C<sub>∞</sub> again. This gives <b>9.4</b>.</li>
+        <li>Steps 2 and 3 use exactly the same angles. The only difference is whether the rings can bend. So bending rings alone make the chain 6.8 ÷ 9.4 = <b>0.73</b> times as large.</li>
+      </ol>
+      <table class="mini">
+        <thead><tr><th></th><th>real rings</th><th>frozen rings, same angles</th><th>ratio</th></tr></thead>
+        <tbody><tr><td>CHARMM36</td><td>6.8</td><td>9.4</td><td>0.73</td></tr><tr><td>GLYCAM06</td><td>21</td><td>30</td><td>0.71</td></tr></tbody>
+      </table>
+      <p>The two force fields disagree on the chain size itself, yet give nearly the same ratio. That is why it can be used as a correction: the calculation from the energy map (views 4 to 6) can only use frozen rings, so its chain sizes are multiplied by 0.73 before being compared with the measured one.</p>
     </div>
   </section>
 </div>
