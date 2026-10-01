@@ -5,17 +5,17 @@
 :root{
   --bg:#f6f8fa; --panel:#ffffff; --ink:#18222d; --muted:#5a6876; --line:#d5dce3;
   --blue:#2a78d6; --blue-soft:#cfe2f8; --orange:#eb6834; --teal:#12996b; --band:#dff3ea;
-  --heat0:#143a66; --heat1:#e9f0f7; --void:#eceff2; --dot:#ffffff; --dotline:#18222d; --plane2:#b4691f;
+  --heat0:#143a66; --heat1:#e9f0f7; --void:#eceff2; --dot:#ffffff; --dotline:#18222d; --plane2:#b4691f; --atomO:#c9372c; --atomC:#55606b;
   --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#10161c; --panel:#18212a; --ink:#e6edf3; --muted:#9aa8b5; --line:#2c3945;
   --blue:#5aa2f0; --blue-soft:#1f3a57; --orange:#f58a5c; --teal:#3fc79a; --band:#173a2e;
-  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; color-scheme:dark } }
+  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; --atomO:#f0776c; --atomC:#a9b4bf; color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#10161c; --panel:#18212a; --ink:#e6edf3; --muted:#9aa8b5; --line:#2c3945;
   --blue:#5aa2f0; --blue-soft:#1f3a57; --orange:#f58a5c; --teal:#3fc79a; --band:#173a2e;
-  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; color-scheme:dark }
+  --heat0:#8fc1f5; --heat1:#1b2732; --void:#141b22; --dot:#10161c; --dotline:#e6edf3; --plane2:#e0a05a; --atomO:#f0776c; --atomC:#a9b4bf; color-scheme:dark }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;margin:0}
 .wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:28px 60px;display:flex;flex-direction:column;gap:22px}
@@ -48,6 +48,10 @@ canvas{display:block;width:100%;touch-action:pan-y;border-radius:6px}
 .seg button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .local{display:flex;align-items:center;gap:10px;padding:2px 4px;font-size:.86rem}
 .local input{flex:1;min-width:0} .local output{font-family:var(--mono);color:var(--blue);min-width:5.5em;text-align:right}
+ol.methods{margin:0 0 10px;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+ol.methods button{font:inherit;font-size:.9rem;text-align:left;width:100%;display:flex;gap:8px;align-items:baseline;padding:3px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+ol.methods button:hover{border-color:var(--blue)} ol.methods button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+ol.methods .n{font-family:var(--mono);font-weight:600;min-width:1.2em} ol.methods .v{margin-left:auto;font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
 .sub{font-size:.78rem;color:var(--muted);padding:0 4px;text-align:center}
 .gauge{position:relative;height:50px;margin:6px 14px 8px}
 .gauge .axis{position:absolute;left:0;right:0;top:20px;height:8px;background:var(--void);border-radius:4px}
@@ -62,7 +66,7 @@ dfn{font-style:normal;font-weight:600}
 <div class="wrap">
   <header>
     <h1>How one joint between two glucose rings decides the size of an amylose chain</h1>
-    <p class="lede">Five drawings, all computed from the geometry and the energies used in the paper. The two sliders stay at the top: move them and every drawing follows. Drag a molecule to turn it.</p>
+    <p class="lede">Eight drawings, all computed from the geometry and the energies used in the paper. The two sliders stay at the top: move them and every drawing follows. Drag a molecule to turn it.</p>
   </header>
 
   <div class="controls" role="group" aria-label="The two quantities">
@@ -162,6 +166,58 @@ dfn{font-style:normal;font-weight:600}
       <p>Now move the two sliders. Shifting the average ψ by 30° changes C<sub>∞</sub> about fourfold. Going from no flips to one joint in four roughly halves it. Those are the <dfn>two numbers</dfn> of the paper's title. The buttons under the sliders put them where each method puts them.</p>
     </div>
   </section>
+
+  <section class="step">
+    <div class="fig">
+      <canvas id="c6" height="380" aria-label="Chain size for every combination of average angle and share of flipped joints"></canvas>
+      <div class="read"><span>here: C<sub>∞</sub> × 0.73 = <b class="t" id="r6c"></b></span><span>measured <b class="t">3.9 – 5.8</b></span></div>
+      <div class="cap">Colour: C<sub>∞</sub> computed for every pair of settings (darker = larger chain). Green outline: the settings that reproduce the measured size. Cross: the sliders. Numbers: the methods listed on the right. Click anywhere to move the sliders there.</div>
+    </div>
+    <div>
+      <div class="num">6 · THE TWO NUMBERS TOGETHER</div>
+      <h2>Every combination of the two quantities, and where each method lands</h2>
+      <p>Horizontal: the average ψ of the unflipped joints. Vertical: the share of flipped joints. The measured chain size does not pick one point; it picks the green band. Any method that lands in the band agrees with experiment on size.</p>
+      <ol class="methods" id="methods"></ol>
+      <p>Points 1 to 4 are energy calculations with water as a continuous medium: they scatter from one side of the picture to the other. Points 5 to 7 are simulations with water molecules: they agree on ψ and disagree on the flips.</p>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="fig">
+      <div class="seg" role="group" aria-label="Which hydroxyl arrangement">
+        <button type="button" id="ohScan" aria-pressed="true">As scanned</button>
+        <button type="button" id="ohBest" aria-pressed="false">Lowest energy found</button>
+      </div>
+      <canvas id="c7" height="310" aria-label="All atoms of the two rings with their hydroxyl groups and hydrogen bonds"></canvas>
+      <div class="read"><span>ψ = <b id="r7psi"></b></span><span>O–H···O contacts <b class="t" id="r7hb"></b></span><span id="r7e"></span></div>
+      <canvas id="c7p" height="210" aria-label="Energy along the valley with one hydroxyl arrangement and with the lowest one"></canvas>
+      <div class="cap">Top: methyl α-maltoside at φ = 100° and the ψ of the top slider (nearest computed value). Red: oxygen. Small white: the hydrogen of each OH group; hydrogens on carbon are not drawn. Dotted green: O–H···O contact shorter than 2.5 Å. Bottom: energy along the valley, relative to its lowest point, for four calculations.</div>
+    </div>
+    <div>
+      <div class="num">7 · THE HYDROXYL GROUPS</div>
+      <h2>Same φ and ψ, different hydroxyl orientations, different energy</h2>
+      <p>The two rings carry seven OH groups and two CH₂OH groups. Each can point in about three directions, and they form hydrogen bonds with one another. None of this changes φ or ψ, but it changes the energy by several kcal/mol, more than the differences along the valley in view 4.</p>
+      <p>The energy map of view 4 was computed by stepping from one square to the next, and each square kept the hydroxyl orientations of the square before it. Press <dfn>Lowest energy found</dfn>: that is the best of 300 orientations tried at the same φ and ψ. Watch the hydrogens turn and new contacts form.</p>
+      <p>The lower plot is the consequence. Dashed lines: the valley with the orientations as scanned. Solid lines: with the lowest orientation at each ψ. The low end of the valley moves from ψ ≈ −150° to ψ ≈ −120°, with the fast method (GFN2-xTB) and with the more accurate one (density-functional theory, r2SCAN) alike. That is point 1 jumping to points 3 and 4 in view 6.</p>
+      <p>In real water these internal hydrogen bonds compete with hydrogen bonds to water molecules, which a continuous medium cannot offer. That is the likely reason the simulations with water molecules stay near ψ = −145°.</p>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="fig">
+      <canvas id="c8" height="330" aria-label="A simulated chain of twelve rings and the same chain rebuilt with rigid rings"></canvas>
+      <div class="local"><label for="frame">snapshot</label><input id="frame" type="range" min="0" max="29" step="1" value="12"><output id="frameOut" for="frame"></output></div>
+      <div class="read"><span>end to end, simulation <b id="r8a"></b></span><span>rigid rings, same φ and ψ <b class="o" id="r8b"></b></span><span>C1–O–C4 angle <b id="r8ang"></b> (rigid model: 115°)</span></div>
+      <div class="cap">Blue: twelve rings from one snapshot of a simulation in water (CHARMM36, 100 ns run). Orange outline: the same chain rebuilt from that snapshot's own φ and ψ at every joint, but with identical rigid rings. Both start on the same first ring.</div>
+    </div>
+    <div>
+      <div class="num">8 · RIGID RINGS VERSUS REAL RINGS</div>
+      <h2>The calculation treats rings as rigid; real rings give a little at every joint</h2>
+      <p>Views 2 to 6 build chains from one rigid copy of the ring, so that φ and ψ are the only freedom. In a simulation the rings pucker slightly and the angle at the shared oxygen opens and closes by a few degrees.</p>
+      <p>Move through the snapshots. The two chains have exactly the same φ and ψ at every joint and start on the same ring, yet they drift apart along the chain. In a single snapshot the rigid chain can come out longer or shorter.</p>
+      <p>On average it comes out longer. Over ten simulations of 100 ns, C<sub>∞</sub> is 9.4 with rigid rings and 6.8 with the real ones, a factor of 0.73. A second force field (GLYCAM06) gives 30 and 21, a factor of 0.71. This is the factor 0.73 that views 5 and 6 apply before comparing with the measured size.</p>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -216,16 +272,18 @@ function frameFrom(ex,ey){ex=norm(ex);ey=norm(sub(ey,sc(ex,dot(ey,ex))));const e
 function draw3D(id,res,o){                     // o: {Q base view, centre, span Å, colors per residue, labels}
   const c=document.getElementById(id),{g,w,h}=setup(c);const Q=mul3(userRot(id),o.Q);const s=w/o.span;
   const P=p=>{const q=rot(Q,sub(p,o.centre));return [w/2+(o.dx||0)+q[0]*s,h/2-q[1]*s,q[2]]};
-  const items=[];const ink=css('--ink'),line=css('--line');
+  const items=[];const ink=css('--ink');
   if(o.items)o.items(P,g,s).forEach(i=>items.push(i));
-  res.forEach((r,k)=>{const col=o.color(k);const ring=r.ring.map(P);
-    items.push({z:ring.reduce((a,p)=>a+p[2],0)/6,f:()=>{g.beginPath();ring.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fillStyle=col.fill;g.globalAlpha=.88;g.fill();g.globalAlpha=1;g.strokeStyle=col.edge;g.lineWidth=1.4;g.stroke();
-      const o5=ring[D.ix.O5];g.beginPath();g.arc(o5[0],o5[1],Math.max(2,s*.28),0,7);g.fillStyle=col.edge;g.fill()}});
-    const seg=(a,b,wd,cl)=>{const A=P(a),B=P(b);items.push({z:(A[2]+B[2])/2,f:()=>{g.beginPath();g.moveTo(A[0],A[1]);g.lineTo(B[0],B[1]);g.strokeStyle=cl;g.lineWidth=wd;g.lineCap='round';g.stroke()}})};
-    seg(r.ring[D.ix.C5],r.C6,1.6,col.edge);seg(r.C6,r.O6,1.6,col.edge);
-    if(k<res.length-1){const nx=res[k+1];seg(r.ring[D.ix.C1],r.Og,2,ink);seg(r.Og,nx.ring[D.ix.C4],2,ink);
-      const og=P(r.Og);items.push({z:og[2]+.5,f:()=>{g.beginPath();g.arc(og[0],og[1],Math.max(2.5,s*.36),0,7);g.fillStyle=o.joint?o.joint(k):ink;g.fill()}})}
-  });
+  const seg=(a,b,wd,cl)=>{const A=P(a),B=P(b);items.push({z:(A[2]+B[2])/2,f:()=>{g.beginPath();g.moveTo(A[0],A[1]);g.lineTo(B[0],B[1]);g.strokeStyle=cl;g.lineWidth=wd;g.lineCap='round';g.stroke()}})};
+  const addChain=(res,color,joint,ghost)=>res.forEach((r,k)=>{const col=color(k);const ring=r.ring.map(P);
+    items.push({z:ring.reduce((a,p)=>a+p[2],0)/6+(ghost?.3:0),f:()=>{g.beginPath();ring.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();
+      if(!ghost){g.fillStyle=col.fill;g.globalAlpha=.88;g.fill();g.globalAlpha=1}g.strokeStyle=col.edge;g.lineWidth=ghost?2:1.4;g.stroke();
+      if(!ghost){const o5=ring[D.ix.O5];g.beginPath();g.arc(o5[0],o5[1],Math.max(2,s*.28),0,7);g.fillStyle=col.edge;g.fill()}}});
+    if(!ghost){seg(r.ring[D.ix.C5],r.C6,1.6,col.edge);seg(r.C6,r.O6,1.6,col.edge)}
+    if(k<res.length-1){const nx=res[k+1];const lc=ghost?col.edge:ink;
+      seg(r.ring[D.ix.C1],r.Og,2,lc);seg(r.Og,nx.ring[D.ix.C4],2,lc);
+      if(!ghost){const og=P(r.Og);items.push({z:og[2]+.5,f:()=>{g.beginPath();g.arc(og[0],og[1],Math.max(2.5,s*.36),0,7);g.fillStyle=joint?joint(k):ink;g.fill()}})}}});
+  addChain(res,o.color,o.joint,false);if(o.ghost)addChain(o.ghost,()=>orange(),null,true);
   items.sort((a,b)=>a.z-b.z).forEach(i=>i.f());
   if(o.labels){g.font='500 13px '+css('--mono');g.fillStyle=ink;g.textAlign='center';
     o.labels.forEach(L=>{const p=P(L.p);g.fillStyle=css('--panel');g.globalAlpha=.8;const tw=g.measureText(L.t).width;g.fillRect(p[0]+L.dx-tw/2-3,p[1]+L.dy-12,tw+6,16);g.globalAlpha=1;g.fillStyle=L.c||ink;g.fillText(L.t,p[0]+L.dx,p[1]+L.dy)})}
@@ -330,19 +388,77 @@ function view5(S){const st=chainStats(S.w,NRES-1);const c=el('c5'),{g,w,h}=setup
   el('r5c').textContent=fmt(st.Cinf);el('r5cf').textContent=fmt(st.Cinf*.73);
   const pos=x=>100*Math.log(x/0.5)/Math.log(80);el('gVal').style.left=Math.max(0,Math.min(100,pos(st.Cinf*.73)))+'%';
   el('gExp').style.left=pos(3.9)+'%';el('gExp').style.width=(pos(5.8)-pos(3.9))+'%';[1,2,5,10,20].forEach(v=>el('gt'+v).style.left=pos(v)+'%')}
+// ---- view 6: the plane of the two quantities
+const PG=[],SG=[];for(let x=-180;x<=-100;x+=2.5)PG.push(x);for(let y=0;y<=100;y+=5)SG.push(y);let GRID=null;
+const METHODS=[['GFN2-xTB map as computed (view 4)',-150,natural],['Same method, other continuum model (GBSA)',-120,.080],['GFN2-xTB, hydroxyls rearranged (view 7)',-116,.10],
+  ['DFT (r2SCAN), hydroxyls rearranged',-119,.002],['Simulation in water, CHARMM36',-144,.063],['Simulation in water, GLYCAM06',-147,.007],['Simulation in water, CSFF (published)',-153,.011]];
+function view6(S){if(!GRID){GRID=PG.map(ps=>{const k=solveK(ps+117.8);return SG.map(sv=>chainStats(weights(k,pFromSlider(sv)),2).Cinf)})}
+  const c=el('c6'),{g,w,h}=setup(c);const mL=50,mB=36,mT=8,mR=10,cw=(w-mL-mR)/PG.length,ch=(h-mT-mB)/SG.length;
+  const X=ps=>mL+((ps+180)/2.5+.5)*cw,Y=sv=>h-mB-(sv/5+.5)*ch;c._geo={mL,mB,mT,cw,ch,h};
+  const hex=q=>[1,3,5].map(i=>parseInt(q.slice(i,i+2),16)),a=hex(css('--heat1')),b=hex(css('--heat0'));
+  PG.forEach((ps,i)=>SG.forEach((sv,j)=>{const t=Math.max(0,Math.min(1,Math.log(GRID[i][j]/0.8)/Math.log(40)));g.fillStyle=`rgb(${a.map((x,q)=>Math.round(x+(b[q]-x)*t)).join(',')})`;g.fillRect(mL+i*cw,h-mB-(j+1)*ch,cw+.5,ch+.5)}));
+  const inb=(i,j)=>i>=0&&j>=0&&i<PG.length&&j<SG.length&&GRID[i][j]*.73>=3.9&&GRID[i][j]*.73<=5.8;g.strokeStyle=css('--teal');g.lineWidth=2.5;g.beginPath();
+  PG.forEach((ps,i)=>SG.forEach((sv,j)=>{if(!inb(i,j))return;const x0=mL+i*cw,y0=h-mB-(j+1)*ch;
+    if(!inb(i-1,j)){g.moveTo(x0,y0);g.lineTo(x0,y0+ch)}if(!inb(i+1,j)){g.moveTo(x0+cw,y0);g.lineTo(x0+cw,y0+ch)}if(!inb(i,j+1)){g.moveTo(x0,y0);g.lineTo(x0+cw,y0)}if(!inb(i,j-1)){g.moveTo(x0,y0+ch);g.lineTo(x0+cw,y0+ch)}}));g.stroke();
+  g.font='600 12px '+css('--mono');g.textAlign='center';METHODS.forEach((m,n)=>{const x=X(m[1]),y=Y(sliderFromP(m[2]));g.beginPath();g.arc(x,y,9,0,7);g.fillStyle=n<4?css('--panel'):css('--ink');g.fill();g.strokeStyle=css('--ink');g.lineWidth=1.5;g.stroke();g.fillStyle=n<4?css('--ink'):css('--panel');g.fillText(n+1,x,y+4)});
+  const sx=X(S.psi),sy=Y(+el('flip').value);g.strokeStyle=css('--orange');g.lineWidth=2;g.beginPath();g.moveTo(sx-13,sy);g.lineTo(sx+13,sy);g.moveTo(sx,sy-13);g.lineTo(sx,sy+13);g.stroke();
+  g.fillStyle=css('--muted');g.font='12px '+css('--mono');g.textAlign='center';for(let ps=-180;ps<=-100;ps+=20)g.fillText(String(ps).replace('-','−'),X(ps),h-mB+16);
+  g.textAlign='right';[0,.01,.03,.1,.3].forEach(pv=>g.fillText((pv*100)+' %',mL-6,Y(sliderFromP(pv))+4));
+  g.fillStyle=css('--ink');g.font='13px '+css('--sans');g.textAlign='center';g.fillText('average ψ of the unflipped joints (degrees)',mL+PG.length*cw/2,h-4);
+  g.save();g.translate(13,mT+SG.length*ch/2);g.rotate(-Math.PI/2);g.fillText('flipped joints',0,0);g.restore();
+  el('r6c').textContent=fmt(chainStats(S.w,2).Cinf*.73)}
+// ---- view 7: hydroxyl arrangements (all atoms)
+let ohMode='scan';
+const OH=D.oh;const ohXYZ=(cell,mode)=>{const f=OH.cells[cell][mode],X=[];for(let i=0;i<f.length;i+=3)X.push([f[i],f[i+1],f[i+2]]);return X};
+const OHN=(()=>{const nb=OH.sym.map(()=>[]);OH.bonds.forEach(([a,b])=>{nb[a].push(b);nb[b].push(a)});return nb})();
+const Q7=(()=>{const X=ohXYZ('-150','scan');const nr=r=>norm(cross(sub(X[r[2]],X[r[0]]),sub(X[r[4]],X[r[0]])));let n0=nr(OH.ringA),n1=nr(OH.ringB);if(dot(n0,n1)<0)n1=sc(n1,-1);const n=norm(add(n0,n1));
+  const ex=norm(sub(mean3(OH.ringB.map(i=>X[i])),mean3(OH.ringA.map(i=>X[i]))));const ey=norm(cross(n,ex));return frameFrom(ex,add(sc(ey,.9),sc(n,.44)))})();
+function view7(S){const cellPsi=Math.max(-170,Math.min(-110,Math.round(S.psi/10)*10)),cell=String(cellPsi);const X=ohXYZ(cell,ohMode);
+  const c=el('c7'),{g,w,h}=setup(c);const Q=mul3(userRot('c7'),Q7);const heavy=OH.sym.map((q,i)=>i).filter(i=>OH.sym[i]!=='H');const cen=mean3(heavy.map(i=>X[i]));const sca=Math.min(w/15,h/9.5);
+  const P=p=>{const q=rot(Q,sub(p,cen));return [w/2+q[0]*sca,h/2-q[1]*sca,q[2]]};const isOH=i=>OH.sym[i]==='H'&&OH.sym[OHN[i][0]]==='O';const show=i=>OH.sym[i]!=='H'||isOH(i);
+  const items=[];OH.bonds.forEach(([a,b])=>{if(!show(a)||!show(b))return;const A=P(X[a]),B=P(X[b]);items.push({z:(A[2]+B[2])/2,f:()=>{g.beginPath();g.moveTo(A[0],A[1]);g.lineTo(B[0],B[1]);g.strokeStyle=css('--atomC');g.lineWidth=3;g.lineCap='round';g.stroke()}})});
+  let nhb=0;OH.sym.forEach((q,hi)=>{if(!isOH(hi))return;const own=OHN[hi][0];OH.sym.forEach((q2,oi)=>{if(q2!=='O'||oi===own)return;if(len(sub(X[hi],X[oi]))<2.5){nhb++;const A=P(X[hi]),B=P(X[oi]);
+    items.push({z:(A[2]+B[2])/2+.1,f:()=>{g.beginPath();g.setLineDash([2,4]);g.moveTo(A[0],A[1]);g.lineTo(B[0],B[1]);g.strokeStyle=css('--teal');g.lineWidth=2.5;g.stroke();g.setLineDash([])}})}})});
+  OH.sym.forEach((q,i)=>{if(!show(i))return;const A=P(X[i]);const r=q==='H'?sca*.2:q==='O'?sca*.34:sca*.26;items.push({z:A[2]+.2,f:()=>{g.beginPath();g.arc(A[0],A[1],r,0,7);g.fillStyle=q==='O'?css('--atomO'):q==='H'?css('--panel'):css('--atomC');g.fill();if(q==='H'){g.strokeStyle=css('--ink');g.lineWidth=1.3;g.stroke()}}})});
+  items.sort((a,b)=>a.z-b.z).forEach(i=>i.f());
+  el('r7psi').textContent=fmt(cellPsi,0)+'°';el('r7hb').textContent=nhb;const dE=OH.cells[cell].dE;
+  el('r7e').innerHTML=ohMode==='scan'?'energy <b class="o">'+fmt(dE,1)+' kcal/mol</b> above the lowest found':'energy <b class="t">lowest of 300</b> ('+fmt(dE,1)+' kcal/mol below the scanned one)';
+  // profile plot
+  const c2=el('c7p'),G=setup(c2),g2=G.g,W=G.w,Hh=G.h;const mL=44,mB=30,mT=10,mR=24;const X2=ps=>mL+(ps+170)/60*(W-mL-mR),Y2=e=>Hh-mB-e/4.2*(Hh-mT-mB);
+  g2.strokeStyle=css('--line');g2.lineWidth=1;g2.font='12px '+css('--mono');g2.fillStyle=css('--muted');g2.textAlign='right';[0,1,2,3,4].forEach(e=>{g2.beginPath();g2.moveTo(mL,Y2(e));g2.lineTo(W-mR,Y2(e));g2.stroke();g2.fillText(e,mL-6,Y2(e)+4)});
+  g2.textAlign='center';for(let ps=-170;ps<=-110;ps+=10)g2.fillText(String(ps).replace('-','−'),X2(ps),Hh-mB+16);
+  g2.fillStyle=css('--ink');g2.font='12px '+css('--sans');g2.fillText('ψ (degrees)',mL+(W-mL-mR)/2,Hh-2);g2.save();g2.translate(12,mT+(Hh-mT-mB)/2);g2.rotate(-Math.PI/2);g2.fillText('kcal/mol',0,0);g2.restore();
+  g2.fillStyle=css('--band');g2.fillRect(X2(cellPsi)-7,mT,14,Hh-mT-mB);
+  const series=[['xtb map frame',css('--blue'),true,'GFN2-xTB, as scanned'],['xtb best network',css('--blue'),false,'GFN2-xTB, lowest'],['TZVP-D3 // xtb map frame',css('--ink'),true,'DFT, as scanned'],['TZVP-D3 // 3c, best of 6',css('--ink'),false,'DFT, lowest']];
+  series.forEach(([k,col,dash,lab],n)=>{const v=OH.prof[k];g2.strokeStyle=col;g2.lineWidth=2.2;g2.setLineDash(dash?[6,4]:[]);g2.beginPath();v.forEach((e,i)=>{const x=X2(-170+10*i),y=Y2(Math.min(e,4.2));i?g2.lineTo(x,y):g2.moveTo(x,y)});g2.stroke();
+    v.forEach((e,i)=>{g2.beginPath();g2.arc(X2(-170+10*i),Y2(Math.min(e,4.2)),3,0,7);g2.fillStyle=col;g2.fill()});
+    const lx=X2(-152)+(n%2)*((X2(-110)-X2(-152))/2),ly=mT+8+Math.floor(n/2)*15;g2.beginPath();g2.moveTo(lx,ly);g2.lineTo(lx+26,ly);g2.stroke();g2.setLineDash([]);g2.fillStyle=css('--ink');g2.textAlign='left';g2.font='12px '+css('--sans');g2.fillText(lab,lx+32,ly+4)})}
+// ---- view 8: simulated chain versus the same chain with rigid rings
+function view8(){const F=D.md.frames[+el('frame').value],n=F.tors.length+1;const at=(k,a)=>{const o=(k*9+a)*3;return [F.X[o],F.X[o+1],F.X[o+2]]};
+  const md=[];for(let k=0;k<n;k++)md.push({ring:[0,1,2,3,4,5].map(a=>at(k,a)),O4:at(k,6),C6:at(k,7),O6:at(k,8),Og:k<n-1?at(k+1,6):at(k,6)});
+  const rigid=buildChain(F.tors.map(([a,b])=>stepT(a,b)));const cm=md.map(r=>mean3(r.ring)),cr=rigid.map(r=>mean3(r.ring));
+  const ex=sub(cm[n-1],cm[0]);const nrm=cross(sub(md[0].ring[2],md[0].ring[0]),sub(md[0].ring[4],md[0].ring[0]));
+  draw3D('c8',md,{Q:frameFrom(ex,nrm),centre:mean3(cm.concat(cr)),span:48,color:k=>blue(),ghost:rigid});
+  el('frameOut').textContent=fmt(F.t,0)+' ns';el('r8a').textContent=fmt(len(sub(cm[n-1],cm[0]))/10,2)+' nm';el('r8b').textContent=fmt(len(sub(cr[n-1],cr[0]))/10,2)+' nm';
+  el('r8ang').textContent=fmt(F.bridge.reduce((a,b)=>a+b,0)/F.bridge.length,0)+'°'}
 function update(){const S=state();el('psiOut').textContent='ψ = '+fmt(S.psi)+'°';el('flipOut').textContent=fmt(100*S.p)+' %';
   view1(S);const h=helixView('c2',S,null);el('r2n').textContent=fmt(h.n);el('r2rise').textContent=fmt(h.rise,2)+' nm';el('r2len').textContent=fmt(19*h.rise)+' nm';
-  helixView('c3',S,9);view4(S);view5(S)}
+  helixView('c3',S,9);view4(S);view5(S);view6(S);view7(S);view8()}
 
 // ---------- controls ----------
 const chips=(id,items,apply)=>items.forEach(([t,v])=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',()=>{apply(v);update()});el(id).appendChild(b)});
 chips('psiChips',[['stretched −170°',-170],['energy map as computed −150°',-150],['simulations in water, crystal −145°',-145],['hydroxyls rearranged −117.5°',-117.5]],v=>el('psi').value=v);
 chips('flipChips',[['none',0],['GLYCAM06 simulation 0.7 %',.007],['CHARMM36 simulation 6.3 %',.063],['energy map 7.4 %',natural],['one in four',.25]],v=>el('flip').value=sliderFromP(v));
 el('flip').value=sliderFromP(natural);
-['psi','flip','phi1'].forEach(id=>el(id).addEventListener('input',update));
+['psi','flip','phi1','frame'].forEach(id=>el(id).addEventListener('input',update));
+[['ohScan','scan'],['ohBest','best']].forEach(([id,a])=>el(id).addEventListener('click',()=>{ohMode=a;el('ohScan').setAttribute('aria-pressed',a==='scan');el('ohBest').setAttribute('aria-pressed',a==='best');update()}));
+METHODS.forEach((m,n)=>{const li=document.createElement('li'),b=document.createElement('button');b.type='button';b.innerHTML='<span class="n">'+(n+1)+'</span><span>'+m[0]+'</span><span class="v">'+fmt(m[1],0)+'°, '+fmt(100*m[2],1)+' %</span>';
+  b.addEventListener('click',()=>{el('psi').value=Math.round(m[1]/2.5)*2.5;el('flip').value=sliderFromP(m[2]);update()});li.appendChild(b);el('methods').appendChild(li)});
+el('c6').addEventListener('click',e=>{const c=el('c6'),r=c.getBoundingClientRect(),G=c._geo;if(!G)return;const i=Math.floor((e.clientX-r.left-G.mL)/G.cw),j=Math.floor((G.h-G.mB-(e.clientY-r.top))/G.ch);
+  if(i<0||j<0||i>=PG.length||j>=SG.length)return;el('psi').value=PG[i];el('flip').value=SG[j];update()});el('c6').style.cursor='crosshair';
 [['showPsi','psi'],['showPhi','phi']].forEach(([id,a])=>el(id).addEventListener('click',()=>{showAngle=a;el('showPsi').setAttribute('aria-pressed',a==='psi');el('showPhi').setAttribute('aria-pressed',a==='phi');update()}));
 {const a=stepT(100,-150),b=valleyT(-150);console.log('builder check, max difference from the exported transform:',Math.max(...a.map((x,i)=>Math.abs(x-b[i]))).toExponential(2))}
-document.querySelectorAll('canvas').forEach(c=>{if(c.id==='c4'||c.id==='c1n')return;let d=null;c.style.cursor='grab';
+document.querySelectorAll('canvas').forEach(c=>{if(['c4','c1n','c6','c7p'].includes(c.id))return;let d=null;c.style.cursor='grab';
   c.addEventListener('pointerdown',e=>{d={x:e.clientX,y:e.clientY,v:{...(views[c.id]||{yaw:0,pitch:0})}};c.setPointerCapture(e.pointerId)});
   c.addEventListener('pointermove',e=>{if(!d)return;views[c.id]={yaw:d.v.yaw+(e.clientX-d.x)*.01,pitch:d.v.pitch+(e.pointerType==='touch'?0:(e.clientY-d.y)*.01)};update()});
   ['pointerup','pointercancel'].forEach(t=>c.addEventListener(t,()=>d=null))});
