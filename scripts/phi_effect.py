@@ -14,10 +14,12 @@ def write_table(out):
     c, g = out["CHARMM36"], out["GLYCAM06"]; f = lambda k, d=1: f"{c[k]:.{d}f} & {g[k]:.{d}f}"
     L = [f"flipped linkages (\\%) & {100*c['flips']:.1f} & {100*g['flips']:.1f} \\\\",
          f"mean $\\varphi$, $\\psi$ of the unflipped linkages & ${c['phi_mean']:.0f}^\\circ$, ${c['psi_mean']:.0f}^\\circ$ & ${g['phi_mean']:.0f}^\\circ$, ${g['psi_mean']:.0f}^\\circ$ \\\\",
-         f"standard deviation of $\\varphi$, $\\psi$ & ${c['phi_sd']:.1f}^\\circ$, ${c['psi_sd']:.1f}^\\circ$ & ${g['phi_sd']:.1f}^\\circ$, ${g['psi_sd']:.1f}^\\circ$ \\\\", "\\midrule",
+         f"standard deviation of $\\varphi$, $\\psi$ & ${c['phi_sd']:.1f}^\\circ$, ${c['psi_sd']:.1f}^\\circ$ & ${g['phi_sd']:.1f}^\\circ$, ${g['psi_sd']:.1f}^\\circ$ \\\\",
+         f"correlation of $\\varphi$ and $\\psi$; slope $\\mathrm{{d}}\\psi/\\mathrm{{d}}\\varphi$ & {c['corr']:.2f}; {c['slope']:.2f} & {g['corr']:.2f}; {g['slope']:.2f} \\\\", "\\midrule",
          f"$C_\\infty$, all linkages & {f('C_all')} \\\\", f"$C_\\infty$, unflipped linkages only & {f('C_unflipped')} \\\\",
          f"\\quad with the mean $\\varphi$ of the other force field & {f('C_unflipped_phi_of_other')} \\\\", f"\\quad with the mean $\\psi$ of the other & {f('C_unflipped_psi_of_other')} \\\\",
-         f"\\quad with the widths of the other & {f('C_unflipped_widths_of_other')} \\\\", f"\\quad with the widths and the means of the other & {f('C_unflipped_widths_and_means_of_other')} \\\\"]
+         f"\\quad with the widths of the other & {f('C_unflipped_widths_of_other')} \\\\", f"\\quad with the widths and the means of the other & {f('C_unflipped_widths_and_means_of_other')} \\\\",
+         f"\\quad with the correlation of $\\varphi$ and $\\psi$ removed & {f('C_unflipped_uncorrelated')} \\\\"]
     (HERE.parent / "manuscript_JPCB" / "tab_phi_effect.tex").write_text("\n".join(L) + "\n\\bottomrule\n")
 if len(sys.argv) > 1 and sys.argv[1] == "table":
     write_table(json.loads((RES / "phi_effect.json").read_text())); sys.exit()
@@ -31,6 +33,18 @@ out = {}
 sets = {"CHARMM36": load("SC*_r[0-9]*.npz"), "GLYCAM06": load("GLY6_r*.npz")}
 syn = {k: np.abs((v[:, 1] + 117.8 + 180) % 360 - 180) <= 90 for k, v in sets.items()}
 mphi = {k: cmean(v[syn[k], 0]) for k, v in sets.items()}; mpsi = {k: cmean(v[syn[k], 1]) for k, v in sets.items()}
+def add_corr(out):
+    """correlation between phi and psi among the unflipped linkages, and C_inf with that correlation removed
+    (psi values reassigned at random among the same samples: both one-angle distributions unchanged)"""
+    rng = np.random.default_rng(11)
+    for k in sets:
+        S = sets[k][syn[k]]; psi = np.where(S[:, 1] > 100, S[:, 1] - 360, S[:, 1])
+        T = S.copy(); T[:, 1] = rng.permutation(S[:, 1])
+        out[k].update(corr=float(np.corrcoef(S[:, 0], psi)[0, 1]), slope=float(np.polyfit(S[:, 0], psi, 1)[0]), C_unflipped_uncorrelated=C(T))
+        print(k, "corr", round(out[k]["corr"], 2), "slope", round(out[k]["slope"], 2), "C unflipped", round(out[k]["C_unflipped"], 2), "-> uncorrelated", round(out[k]["C_unflipped_uncorrelated"], 2), flush=True)
+if len(sys.argv) > 1 and sys.argv[1] == "corr":
+    out = json.loads((RES / "phi_effect.json").read_text()); add_corr(out)
+    (RES / "phi_effect.json").write_text(json.dumps(out, indent=1)); write_table(out); sys.exit()
 for k, other in (("CHARMM36", "GLYCAM06"), ("GLYCAM06", "CHARMM36")):
     P = sets[k]; S = P[syn[k]]
     sh = S.copy(); sh[:, 0] += mphi[other] - mphi[k]
@@ -50,5 +64,6 @@ for k, other in (("CHARMM36", "GLYCAM06"), ("GLYCAM06", "CHARMM36")):
     out[k]["C_unflipped_widths_of_other"] = C(S)
     S[:, 0] += mphi[other] - mphi[k]; S[:, 1] += mpsi[other] - mpsi[k]; out[k]["C_unflipped_widths_and_means_of_other"] = C(S)
     print(k, "widths of", other, round(out[k]["C_unflipped_widths_of_other"], 2), "| widths and means:", round(out[k]["C_unflipped_widths_and_means_of_other"], 2), flush=True)
+add_corr(out)
 (RES / "phi_effect.json").write_text(json.dumps(out, indent=1))
 write_table(out)

@@ -11,7 +11,10 @@
   "C_unflipped_phi_of_other": 18.18311761655817,
   "C_unflipped_psi_of_other": 18.118345978059182,
   "C_unflipped_widths_of_other": 24.68746723965898,
-  "C_unflipped_widths_and_means_of_other": 30.585350621319073
+  "C_unflipped_widths_and_means_of_other": 30.585350621319073,
+  "corr": 0.698269552086131,
+  "slope": 0.6092941867064615,
+  "C_unflipped_uncorrelated": 17.158935434212157
  },
  "GLYCAM06": {
   "n": 24525,
@@ -25,6 +28,9 @@
   "C_unflipped_phi_of_other": 31.05098688876992,
   "C_unflipped_psi_of_other": 31.1709881884377,
   "C_unflipped_widths_of_other": 23.308286212790033,
-  "C_unflipped_widths_and_means_of_other": 18.84840814500295
+  "C_unflipped_widths_and_means_of_other": 18.84840814500295,
+  "corr": 0.48530280271395837,
+  "slope": 0.4616370972732093,
+  "C_unflipped_uncorrelated": 33.104812417921266
  }
 }
